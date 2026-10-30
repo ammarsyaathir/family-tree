@@ -10,7 +10,6 @@ import {
   ChevronRight,
   Calendar,
   MapPin,
-  Briefcase,
   GitBranch,
   Heart,
   Users,
@@ -21,6 +20,8 @@ import {
   getRelationToAmmar,
   getGenealogySnippet,
   cropImageToSquareDataUrl,
+  normalizeCityName,
+  getShortFirstName,
 } from '../utils/familyUtils';
 
 interface PersonProfileModalProps {
@@ -85,6 +86,7 @@ export const PersonProfileModal: React.FC<PersonProfileModalProps> = ({
   const rel = getRelationToAmmar(person, allPeople);
   const genealogy = getGenealogySnippet(person, allPeople);
   const isMe = person.id === 'c_ammar';
+  const cityOnly = normalizeCityName(person.city);
 
   const handlePhotoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -145,10 +147,7 @@ export const PersonProfileModal: React.FC<PersonProfileModalProps> = ({
             {relMember.name}
           </div>
           <div className="text-[11px] text-[#57534E] font-mono-num">
-            {relMember.nickname && relMember.nickname.toLowerCase() !== relMember.name.toLowerCase()
-              ? `${relMember.nickname} · `
-              : ''}
-            {relMember.age} yrs
+            Gen {relMember.generation} · {relMember.age} yrs
           </div>
         </div>
         <ChevronRight className="w-4 h-4 text-[#78716C] group-hover:translate-x-0.5 transition-transform shrink-0" />
@@ -219,7 +218,9 @@ export const PersonProfileModal: React.FC<PersonProfileModalProps> = ({
                   className="mt-2 w-full inline-flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#14362B] hover:bg-[#0D261E] text-white text-[11px] font-semibold transition-colors shadow-2xs"
                 >
                   <Camera className="w-3.5 h-3.5" />
-                  <span>{isUploading ? 'Saving...' : person.avatar ? 'Change Photo' : 'Upload Photo'}</span>
+                  <span>
+                    {isUploading ? 'Saving...' : person.avatar ? 'Change Photo' : 'Upload Photo'}
+                  </span>
                 </button>
 
                 {person.avatar && (
@@ -247,8 +248,6 @@ export const PersonProfileModal: React.FC<PersonProfileModalProps> = ({
             <div className="flex-1 text-center sm:text-left min-w-0">
               <div className="flex flex-wrap items-center justify-center sm:justify-start gap-2 text-xs text-[#57534E]">
                 <span className="font-semibold text-[#14362B]">{rel.text}</span>
-                <span aria-hidden="true">·</span>
-                <span>{person.familyLabel || 'Keluarga'}</span>
               </div>
 
               <h2
@@ -259,15 +258,6 @@ export const PersonProfileModal: React.FC<PersonProfileModalProps> = ({
               </h2>
 
               <div className="mt-2 flex flex-wrap items-center justify-center sm:justify-start gap-2 text-xs text-[#78716C] font-mono-num">
-                {person.nickname &&
-                  person.nickname.toLowerCase() !== person.name.toLowerCase() && (
-                    <>
-                      <span className="font-sans font-medium text-[#1C1917]">
-                        Known as &ldquo;{person.nickname}&rdquo;
-                      </span>
-                      <span aria-hidden="true">·</span>
-                    </>
-                  )}
                 <span>Generation {person.generation}</span>
                 <span aria-hidden="true">·</span>
                 <span className="capitalize font-sans">{person.branch} Lineage</span>
@@ -285,8 +275,8 @@ export const PersonProfileModal: React.FC<PersonProfileModalProps> = ({
             </div>
           </div>
 
-          {/* Vital Metrics Strip */}
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+          {/* Vital Metrics Strip (Date of Birth & Age + City) */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div className="p-4 rounded-xl border border-[#E5DEC9] bg-white">
               <div className="flex items-center gap-2 text-[11px] uppercase tracking-wider text-[#78716C] font-semibold">
                 <Calendar className="w-3.5 h-3.5 text-[#14362B]" />
@@ -303,23 +293,12 @@ export const PersonProfileModal: React.FC<PersonProfileModalProps> = ({
             <div className="p-4 rounded-xl border border-[#E5DEC9] bg-white">
               <div className="flex items-center gap-2 text-[11px] uppercase tracking-wider text-[#78716C] font-semibold">
                 <MapPin className="w-3.5 h-3.5 text-[#9A3412]" />
-                <span>Residence / Hometown</span>
+                <span>City</span>
               </div>
               <div className="mt-1.5 text-sm font-bold text-[#1C1917] truncate">
-                {person.city || 'Malaysia'}
+                {cityOnly}
               </div>
-              <div className="text-xs text-[#57534E] mt-0.5">Documented location</div>
-            </div>
-
-            <div className="p-4 rounded-xl border border-[#E5DEC9] bg-white">
-              <div className="flex items-center gap-2 text-[11px] uppercase tracking-wider text-[#78716C] font-semibold">
-                <Briefcase className="w-3.5 h-3.5 text-[#B47B2B]" />
-                <span>Vocation / Role</span>
-              </div>
-              <div className="mt-1.5 text-sm font-bold text-[#1C1917] truncate">
-                {person.profession || 'Family Member'}
-              </div>
-              <div className="text-xs text-[#57534E] mt-0.5">{person.familyLabel}</div>
+              <div className="text-xs text-[#57534E] mt-0.5">Documented city</div>
             </div>
           </div>
 
@@ -342,8 +321,8 @@ export const PersonProfileModal: React.FC<PersonProfileModalProps> = ({
               </h3>
               {father || mother ? (
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                  {father && renderRelativeCard(father, 'Father (Ayah)')}
-                  {mother && renderRelativeCard(mother, 'Mother (Ibu)')}
+                  {father && renderRelativeCard(father, 'Father')}
+                  {mother && renderRelativeCard(mother, 'Mother')}
                 </div>
               ) : (
                 <div className="p-3.5 rounded-xl border border-[#E5DEC9] bg-[#FBF9F5] text-xs text-[#57534E]">
@@ -378,7 +357,7 @@ export const PersonProfileModal: React.FC<PersonProfileModalProps> = ({
                   className="inline-flex items-center gap-1 text-xs font-semibold text-[#14362B] hover:underline"
                 >
                   <UserPlus className="w-3.5 h-3.5" />
-                  <span>Add Child to {person.nickname || person.name.split(' ')[0]}</span>
+                  <span>Add Child to {getShortFirstName(person.name)}</span>
                 </button>
               </div>
               {children.length > 0 ? (

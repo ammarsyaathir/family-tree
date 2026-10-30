@@ -5,9 +5,45 @@ export const MONTHS_LIST = [
   'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC',
 ];
 
+export const CITY_OPTIONS = [
+  'Bandar Saujana Putra',
+  'Seremban',
+  'Rembau',
+  'Shah Alam',
+  'Kuala Lumpur',
+  'Putrajaya',
+  'Kajang',
+  'Petaling Jaya',
+  'Subang Jaya',
+  'Cyberjaya',
+  'Melaka',
+  'Johor Bahru',
+  'Ipoh',
+  'Kuantan',
+];
+
+export function normalizeCityName(rawCity?: string): string {
+  if (!rawCity) return 'Bandar Saujana Putra';
+  const cityOnly = rawCity.split(',')[0].trim();
+  return cityOnly || 'Bandar Saujana Putra';
+}
+
+export function getShortFirstName(fullName?: string): string {
+  if (!fullName) return 'Member';
+  const beforePatronymic = fullName.split(/\s+(?:Bin|Binti)\s+/i)[0].trim();
+  const cleaned = beforePatronymic
+    .replace(/^(Haji|Hajah|Muhammad|Mohd|Nur|Nurul|Siti)\s+/i, '')
+    .trim();
+  return cleaned || beforePatronymic || fullName;
+}
+
 export function getCleanInitials(person: Partial<FamilyMember>): string {
-  const raw = (person.nickname || person.name || 'M').trim();
-  const cleaned = raw.replace(/^(Haji|Hajah|Muhammad|Nur|Nurul|Mohd|Siti)\s+/i, '').trim() || raw;
+  const raw = (person.name || 'M').trim();
+  const beforePatronymic = raw.split(/\s+(?:Bin|Binti)\s+/i)[0].trim();
+  const cleaned =
+    beforePatronymic.replace(/^(Haji|Hajah|Muhammad|Nur|Nurul|Mohd|Siti)\s+/i, '').trim() ||
+    beforePatronymic ||
+    raw;
   const words = cleaned.split(/\s+/).filter(Boolean);
   if (words.length === 0) return 'FM';
   if (words.length === 1) return words[0].slice(0, 2).toUpperCase();
@@ -16,16 +52,16 @@ export function getCleanInitials(person: Partial<FamilyMember>): string {
 
 export function getRelationToAmmar(
   p: FamilyMember,
-  allPeople: FamilyMember[]
+  _allPeople: FamilyMember[]
 ): { text: string; roleCode: string } {
   if (p.id === 'c_ammar') {
     return { text: 'Archivist / Me', roleCode: 'me' };
   }
   if (p.id === 'd_dad') {
-    return { text: 'Father (Ayah)', roleCode: 'parent' };
+    return { text: 'Father', roleCode: 'parent' };
   }
   if (p.id === 'm_shafrah') {
-    return { text: 'Mother (Ibu)', roleCode: 'parent' };
+    return { text: 'Mother', roleCode: 'parent' };
   }
   if (p.fatherId === 'd_dad' || p.motherId === 'm_shafrah') {
     if (p.id === 'c_asyraf') return { text: 'Eldest Brother', roleCode: 'sibling' };
@@ -48,7 +84,7 @@ export function getRelationToAmmar(
   }
   if (p.generation === 1) {
     return {
-      text: p.gender === 'male' ? 'Grandfather (Atok)' : 'Grandmother (Nenek)',
+      text: p.gender === 'male' ? 'Grandfather' : 'Grandmother',
       roleCode: 'grandparent',
     };
   }
@@ -96,15 +132,15 @@ export function getGenealogySnippet(p: FamilyMember, allPeople: FamilyMember[]):
   const parts: string[] = [];
   if (father || mother) {
     const pNames = [
-      father?.nickname || father?.name?.split(' ')[0],
-      mother?.nickname || mother?.name?.split(' ')[0],
+      father ? getShortFirstName(father.name) : null,
+      mother ? getShortFirstName(mother.name) : null,
     ]
       .filter(Boolean)
       .join(' & ');
     parts.push(`Child of ${pNames}`);
   }
   if (spouses.length > 0) {
-    const sNames = spouses.map((s) => s.nickname || s.name.split(' ')[0]).join(' & ');
+    const sNames = spouses.map((s) => getShortFirstName(s.name)).join(' & ');
     parts.push(`Spouse: ${sNames}`);
   }
   if (children.length > 0) {
@@ -192,10 +228,6 @@ export async function cropImageToSquareDataUrl(file: File, size = 480): Promise<
   return out;
 }
 
-/**
- * Dynamically finds all children of a primary person (and their spouses) from the live dataset.
- * Ensures newly added members immediately appear in the tree!
- */
 export function getDynamicChildrenForCouple(
   primary: FamilyMember,
   spouses: FamilyMember[],
@@ -215,7 +247,6 @@ export function getDynamicChildrenForCouple(
     return false;
   });
 
-  // Sort by age descending (eldest child first), fallback to name
   return matched.sort((a, b) => (b.age || 0) - (a.age || 0));
 }
 
@@ -240,7 +271,9 @@ export function generateCloudflareD1Sql(people: FamilyMember[]): string {
   ];
 
   people.forEach((p) => {
-    const clean = { ...p };
+    const clean = { ...p, city: normalizeCityName(p.city) };
+    delete clean.nickname;
+    delete clean.profession;
     delete clean._updatedAt;
     delete clean._updatedBy;
     const jsonStr = JSON.stringify(clean).replace(/'/g, "''");

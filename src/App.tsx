@@ -135,7 +135,6 @@ export default function App() {
     setIsCreatingMember(true);
     setEditingPerson({
       name: '',
-      nickname: '',
       age: 20,
       dob: '',
       gender: 'male',
@@ -143,8 +142,7 @@ export default function App() {
       branch: 'immediate',
       familyUnit: 'core_ammar',
       familyLabel: 'Keluarga Asas Ammar',
-      city: 'Bandar Saujana Putra, Selangor',
-      profession: '',
+      city: 'Bandar Saujana Putra',
       bio: '',
       fatherId: null,
       motherId: null,
@@ -167,7 +165,7 @@ export default function App() {
       branch: parent.branch,
       familyUnit: parent.familyUnit || 'core_ammar',
       familyLabel: parent.familyLabel || 'Keluarga',
-      city: parent.city || 'Bandar Saujana Putra, Selangor',
+      city: parent.city ? parent.city.split(',')[0].trim() : 'Bandar Saujana Putra',
       fatherId,
       motherId,
       age: 1,
@@ -176,16 +174,20 @@ export default function App() {
 
   const handleSaveMember = async (
     personData: Partial<FamilyMember>,
-    creating: boolean
-  ) => {
-    setIsSavingMember(true);
+    creating: boolean,
+    options?: { silent?: boolean }
+  ): Promise<string | void> => {
+    const silent = Boolean(options?.silent);
+    if (!silent) setIsSavingMember(true);
     try {
       const cleanData = { ...personData };
+      delete cleanData.nickname;
+      delete cleanData.profession;
       delete cleanData._updatedAt;
       delete cleanData._updatedBy;
 
       if (creating) {
-        const newId = `member_${Date.now().toString(36)}`;
+        const newId = String(cleanData.id || `member_${Date.now().toString(36)}`);
         const fullMember: FamilyMember = {
           ...(cleanData as FamilyMember),
           id: newId,
@@ -201,13 +203,18 @@ export default function App() {
         });
         if (!res.ok) throw new Error(await res.text());
         await fetchPeople();
-        setEditingPerson(null);
-        setIsCreatingMember(false);
-        showToast(
-          'Member Added',
-          `${fullMember.name} added to the archive (Total: ${people.length + 1} members).`,
-          'success'
-        );
+        if (!silent) {
+          setEditingPerson(null);
+          setIsCreatingMember(false);
+          showToast(
+            'Member Added',
+            `${fullMember.name} saved to the archive.`,
+            'success'
+          );
+        } else {
+          setIsCreatingMember(false);
+        }
+        return newId;
       } else {
         const targetId = String(personData.id);
         const res = await fetch(`/api/people/${encodeURIComponent(targetId)}`, {
@@ -220,18 +227,24 @@ export default function App() {
         });
         if (!res.ok) throw new Error(await res.text());
         await fetchPeople();
-        setEditingPerson(null);
-        showToast(
-          'Profile Updated',
-          `Changes to ${personData.name} saved to Cloudflare D1 & JSON archive.`,
-          'success'
-        );
+        if (!silent) {
+          setEditingPerson(null);
+          showToast(
+            'Profile Saved',
+            `Changes to ${personData.name} saved to Cloudflare D1 & JSON archive.`,
+            'success'
+          );
+        }
+        return targetId;
       }
     } catch (err: any) {
       console.error('Save error:', err);
-      showToast('Save Error', err.message || 'Could not save member.', 'warn');
+      if (!silent) {
+        showToast('Save Error', err.message || 'Could not save member.', 'warn');
+      }
+      throw err;
     } finally {
-      setIsSavingMember(false);
+      if (!silent) setIsSavingMember(false);
     }
   };
 
@@ -241,6 +254,8 @@ export default function App() {
   ) => {
     try {
       const updated: FamilyMember = { ...person, avatar: avatarDataUrl };
+      delete updated.nickname;
+      delete updated.profession;
       delete updated._updatedAt;
       delete updated._updatedBy;
 
@@ -310,7 +325,8 @@ export default function App() {
 
   const handleCopySummary = async (p: FamilyMember) => {
     const rel = getRelationToAmmar(p, people);
-    const summary = `${p.name} (${p.nickname || 'Relative'})\nRelation to Ammar: ${rel.text}\nGeneration: Gen ${p.generation} · ${p.branch.toUpperCase()} Lineage\nAge: ${p.age} yrs (DOB: ${p.dob || 'Unrecorded'})\nResidence: ${p.city || 'Malaysia'}\nProfession: ${p.profession || 'Family Member'}\nHousehold: ${p.familyLabel || 'Keluarga'}`;
+    const cityOnly = p.city ? p.city.split(',')[0].trim() : 'Bandar Saujana Putra';
+    const summary = `${p.name}\nRelation to Ammar: ${rel.text}\nGeneration: Gen ${p.generation} · ${p.branch.toUpperCase()} Lineage\nAge: ${p.age} yrs (DOB: ${p.dob || 'Unrecorded'})\nCity: ${cityOnly}`;
     try {
       await navigator.clipboard.writeText(summary);
       showToast('Copied to Clipboard', `Summary for ${p.name} copied.`, 'success');
@@ -321,7 +337,9 @@ export default function App() {
 
   const handleExportJson = () => {
     const cleanPeople = people.map((p) => {
-      const copy = { ...p };
+      const copy = { ...p, city: p.city ? p.city.split(',')[0].trim() : 'Bandar Saujana Putra' };
+      delete copy.nickname;
+      delete copy.profession;
       delete copy._updatedAt;
       delete copy._updatedBy;
       return copy;

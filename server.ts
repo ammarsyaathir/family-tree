@@ -47,7 +47,13 @@ function loadRows(): D1Row[] {
       const raw = fs.readFileSync(STORE_PATH, 'utf8');
       const parsed = JSON.parse(raw);
       if (Array.isArray(parsed) && parsed.length > 0) {
-        return parsed;
+        return parsed.map((row: D1Row) => ({
+          ...row,
+          data: {
+            ...row.data,
+            city: row.data?.city ? String(row.data.city).split(',')[0].trim() : 'Bandar Saujana Putra',
+          },
+        }));
       }
     } catch (e) {
       console.error('Failed to read store, re-seeding:', e);
@@ -56,7 +62,10 @@ function loadRows(): D1Row[] {
   const now = new Date().toISOString();
   const initialRows: D1Row[] = SEED_PEOPLE.map((person) => ({
     id: person.id,
-    data: person,
+    data: {
+      ...person,
+      city: person.city ? person.city.split(',')[0].trim() : 'Bandar Saujana Putra',
+    },
     updated_at: now,
     updated_by: 'system_seed',
   }));

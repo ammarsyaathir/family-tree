@@ -8,8 +8,8 @@ import {
   MapPin,
   ChevronRight,
 } from 'lucide-react';
-import { FamilyMember } from '../types/family';
-import { MONTHS_LIST } from '../utils/familyUtils';
+import { FamilyMember, DEFAULT_HOUSEHOLDS } from '../types/family';
+import { MONTHS_LIST, getShortFirstName, normalizeCityName } from '../utils/familyUtils';
 import { DirectoryFilters } from './MemberDirectory';
 
 interface HeritageStatsProps {
@@ -66,9 +66,13 @@ export const HeritageStats: React.FC<HeritageStatsProps> = ({
         existing.count++;
         existing.members.push(p);
       } else {
+        const defaultLabel =
+          DEFAULT_HOUSEHOLDS.find((h) => h.id === uId)?.label ||
+          p.familyLabel ||
+          'Keluarga';
         unitMap.set(uId, {
           id: uId,
-          label: p.familyLabel || 'Keluarga',
+          label: defaultLabel,
           branch: p.branch,
           count: 1,
           members: [p],
@@ -80,7 +84,7 @@ export const HeritageStats: React.FC<HeritageStatsProps> = ({
     // Cities
     const cityCounts = new Map<string, number>();
     people.forEach((p) => {
-      const town = p.city ? p.city.split(',')[0].trim() : 'Unspecified';
+      const town = normalizeCityName(p.city);
       if (town) cityCounts.set(town, (cityCounts.get(town) || 0) + 1);
     });
     const cities = Array.from(cityCounts.entries())
@@ -528,7 +532,7 @@ export const HeritageStats: React.FC<HeritageStatsProps> = ({
                 <div className="text-[11px] text-[#78716C] truncate">
                   {u.members
                     .slice(0, 2)
-                    .map((m) => m.nickname || m.name.split(' ')[0])
+                    .map((m) => getShortFirstName(m.name))
                     .join(', ')}{' '}
                   &amp; family
                 </div>

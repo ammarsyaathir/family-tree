@@ -17,6 +17,7 @@ import {
   getCleanInitials,
   getRelationToAmmar,
   getDynamicChildrenForCouple,
+  getShortFirstName,
 } from '../utils/familyUtils';
 
 interface FamilyTreeCanvasProps {
@@ -76,7 +77,6 @@ export const FamilyTreeCanvas: React.FC<FamilyTreeCanvasProps> = ({
     const found = people.find(
       (p) =>
         p.name.toLowerCase().includes(term) ||
-        (p.nickname && p.nickname.toLowerCase().includes(term)) ||
         (p.city && p.city.toLowerCase().includes(term))
     );
 
@@ -178,15 +178,13 @@ export const FamilyTreeCanvas: React.FC<FamilyTreeCanvasProps> = ({
 
         {/* Role & Name */}
         <div className="mt-2.5 text-[10px] font-medium text-[#78716C] tracking-wide truncate max-w-full">
-          { isMe ? 'Archivist · Me' : roleLabel }
+          {isMe ? 'Archivist · Me' : roleLabel}
         </div>
         <div
           className="mt-0.5 text-xs font-semibold text-[#1C1917] leading-snug line-clamp-1 max-w-full"
           title={person.name}
         >
-          {person.nickname && person.nickname.toLowerCase() !== person.name.toLowerCase()
-            ? person.nickname
-            : person.name.split(' Bin ')[0].split(' Binti ')[0]}
+          {getShortFirstName(person.name)}
         </div>
         <div
           className="text-[11px] text-[#57534E] truncate max-w-full"

@@ -21,6 +21,9 @@ import {
   getRelationToAmmar,
   getGenealogySnippet,
   cropImageToSquareDataUrl,
+  CITY_OPTIONS,
+  normalizeCityName,
+  getShortFirstName,
 } from '../utils/familyUtils';
 
 export interface DirectoryFilters {
@@ -44,7 +47,11 @@ interface MemberDirectoryProps {
   onLocateInTree: (person: FamilyMember) => void;
   onCopySummary: (person: FamilyMember) => void;
   onQuickAvatarUpdate: (person: FamilyMember, avatarDataUrl: string) => Promise<void>;
-  onAddMemberToHousehold: (familyUnit: string, familyLabel: string, branch: FamilyMember['branch']) => void;
+  onAddMemberToHousehold: (
+    familyUnit: string,
+    familyLabel: string,
+    branch: FamilyMember['branch']
+  ) => void;
 }
 
 export const MemberDirectory: React.FC<MemberDirectoryProps> = ({
@@ -64,7 +71,6 @@ export const MemberDirectory: React.FC<MemberDirectoryProps> = ({
   const [uploadingForPerson, setUploadingForPerson] = useState<FamilyMember | null>(null);
   const quickFileInputRef = useRef<HTMLInputElement>(null);
 
-  // Dynamically derive all households and cities from current data
   const householdOptions = useMemo(() => {
     const map = new Map<string, string>();
     DEFAULT_HOUSEHOLDS.forEach((h) => map.set(h.id, h.label));
@@ -77,10 +83,10 @@ export const MemberDirectory: React.FC<MemberDirectoryProps> = ({
   }, [people]);
 
   const cityOptions = useMemo(() => {
-    const set = new Set<string>();
+    const set = new Set<string>(CITY_OPTIONS);
     people.forEach((p) => {
       if (p.city) {
-        const town = p.city.split(',')[0].trim();
+        const town = normalizeCityName(p.city);
         if (town) set.add(town);
       }
     });
@@ -98,13 +104,11 @@ export const MemberDirectory: React.FC<MemberDirectoryProps> = ({
   const filteredPeople = useMemo(() => {
     const q = filters.search.toLowerCase().trim();
     const list = people.filter((p) => {
+      const cityClean = normalizeCityName(p.city).toLowerCase();
       const matchSearch =
         !q ||
         p.name.toLowerCase().includes(q) ||
-        (p.nickname && p.nickname.toLowerCase().includes(q)) ||
-        (p.city && p.city.toLowerCase().includes(q)) ||
-        (p.profession && p.profession.toLowerCase().includes(q)) ||
-        (p.familyLabel && p.familyLabel.toLowerCase().includes(q)) ||
+        cityClean.includes(q) ||
         (p.bio && p.bio.toLowerCase().includes(q));
 
       const matchUnit = filters.familyUnit === 'all' || p.familyUnit === filters.familyUnit;
@@ -114,7 +118,7 @@ export const MemberDirectory: React.FC<MemberDirectoryProps> = ({
       const matchGender = filters.gender === 'all' || p.gender === filters.gender;
       const matchCity =
         filters.city === 'all' ||
-        (p.city && p.city.toLowerCase().includes(filters.city.toLowerCase()));
+        cityClean === filters.city.toLowerCase();
 
       const matchCohort =
         !filters.cohort ||
@@ -146,7 +150,7 @@ export const MemberDirectory: React.FC<MemberDirectoryProps> = ({
     } else if (filters.sortBy === 'name-asc') {
       list.sort((a, b) => a.name.localeCompare(b.name));
     } else if (filters.sortBy === 'family') {
-      list.sort((a, b) => (a.familyLabel || '').localeCompare(b.familyLabel || ''));
+      list.sort((a, b) => (a.familyUnit || '').localeCompare(b.familyUnit || ''));
     } else {
       list.sort((a, b) => {
         if (a.generation !== b.generation) return a.generation - b.generation;
@@ -168,9 +172,13 @@ export const MemberDirectory: React.FC<MemberDirectoryProps> = ({
       if (existing) {
         existing.members.push(p);
       } else {
+        const defaultLabel =
+          DEFAULT_HOUSEHOLDS.find((h) => h.id === unitId)?.label ||
+          p.familyLabel ||
+          'Keluarga';
         map.set(unitId, {
           id: unitId,
-          label: p.familyLabel || 'Keluarga',
+          label: defaultLabel,
           branch: p.branch || 'immediate',
           members: [p],
         });
@@ -207,8 +215,7 @@ export const MemberDirectory: React.FC<MemberDirectoryProps> = ({
     const initials = getCleanInitials(p);
     const rel = getRelationToAmmar(p, people);
     const genealogy = getGenealogySnippet(p, people);
-    const showNickname =
-      p.nickname && p.nickname.trim().toLowerCase() !== p.name.trim().toLowerCase();
+    const cityOnly = normalizeCityName(p.city);
 
     return (
       <article
@@ -221,12 +228,12 @@ export const MemberDirectory: React.FC<MemberDirectoryProps> = ({
         }`}
       >
         <div>
-          {/* Top quiet kicker line: Household · Relation */}
+          {/* Top quiet kicker line: Relation & Branch */}
           <div className="flex items-center justify-between gap-2 text-[11px] text-[#78716C] mb-3.5 pb-2.5 border-b border-[#F2ECE1]">
-            <span className="font-medium text-[#57534E] truncate" title={p.familyLabel}>
-              {p.familyLabel || 'Keluarga'}
+            <span className="font-semibold text-[#14362B]">{rel.text}</span>
+            <span className="font-mono-num">
+              Gen {p.generation} · <span className="capitalize font-sans">{p.branch}</span>
             </span>
-            <span className="shrink-0 font-semibold text-[#14362B]">{rel.text}</span>
           </div>
 
           {/* Identity Row with Interactive Avatar Photo Upload */}
@@ -273,22 +280,16 @@ export const MemberDirectory: React.FC<MemberDirectoryProps> = ({
                 {p.name}
               </h3>
 
-              {/* Unboxed Static Metadata with Middle Dot Separators (Zero-Pill Discipline) */}
+              {/* Unboxed Static Metadata with Middle Dot Separators */}
               <div className="mt-1 flex flex-wrap items-center gap-1.5 text-xs text-[#78716C]">
-                {showNickname && (
-                  <>
-                    <span className="font-medium text-[#57534E]">{p.nickname}</span>
-                    <span aria-hidden="true">·</span>
-                  </>
-                )}
-                <span className="font-mono-num">Gen {p.generation}</span>
+                <span className="capitalize">{p.gender}</span>
                 <span aria-hidden="true">·</span>
-                <span className="capitalize">{p.branch}</span>
+                <span>{cityOnly}</span>
               </div>
             </div>
           </div>
 
-          {/* Vital Records Grid */}
+          {/* Vital Records Grid (Age & Birth + City) */}
           <dl className="mt-4 pt-3 border-t border-[#F2ECE1] grid grid-cols-2 gap-3 text-xs">
             <div>
               <dt className="text-[10px] uppercase tracking-wider text-[#78716C]">Age &amp; Birth</dt>
@@ -297,21 +298,11 @@ export const MemberDirectory: React.FC<MemberDirectoryProps> = ({
               </dd>
             </div>
             <div>
-              <dt className="text-[10px] uppercase tracking-wider text-[#78716C]">Residence</dt>
-              <dd className="mt-0.5 font-medium text-[#1C1917] truncate" title={p.city}>
-                {p.city ? p.city.split(',')[0] : 'Malaysia'}
+              <dt className="text-[10px] uppercase tracking-wider text-[#78716C]">City</dt>
+              <dd className="mt-0.5 font-medium text-[#1C1917] truncate" title={cityOnly}>
+                {cityOnly}
               </dd>
             </div>
-            {p.profession && (
-              <div className="col-span-2">
-                <dt className="text-[10px] uppercase tracking-wider text-[#78716C]">
-                  Vocation / Role
-                </dt>
-                <dd className="mt-0.5 text-[#44403C] truncate" title={p.profession}>
-                  {p.profession}
-                </dd>
-              </div>
-            )}
           </dl>
 
           {/* Genealogy Line */}
@@ -392,7 +383,7 @@ export const MemberDirectory: React.FC<MemberDirectoryProps> = ({
     const h = householdOptions.find((item) => item.id === filters.familyUnit);
     activeFilterChips.push({
       key: 'familyUnit',
-      label: `Household: ${h?.label || filters.familyUnit}`,
+      label: `Unit: ${h?.label || filters.familyUnit}`,
     });
   }
   if (filters.branch !== 'all') {
@@ -416,7 +407,6 @@ export const MemberDirectory: React.FC<MemberDirectoryProps> = ({
 
   return (
     <section aria-label="Family Member Directory" className="space-y-4">
-      {/* Hidden File Input for 1-click Avatar Upload from Directory */}
       <input
         ref={quickFileInputRef}
         type="file"
@@ -433,7 +423,7 @@ export const MemberDirectory: React.FC<MemberDirectoryProps> = ({
             type="search"
             value={filters.search}
             onChange={(e) => onChangeFilters({ search: e.target.value })}
-            placeholder="Search relatives by full name, nickname, residence city, or vocation..."
+            placeholder="Search relatives by full name or city..."
             className="w-full pl-10 pr-4 py-2.5 text-sm bg-[#FBF9F5] border border-[#E5DEC9] rounded-xl text-[#1C1917] placeholder:text-[#78716C] focus:outline-none focus:border-[#14362B]"
           />
         </div>
@@ -493,7 +483,7 @@ export const MemberDirectory: React.FC<MemberDirectoryProps> = ({
           <select
             value={filters.city}
             onChange={(e) => onChangeFilters({ city: e.target.value })}
-            aria-label="Filter by residence city"
+            aria-label="Filter by city"
             className="px-3 py-2 text-xs font-medium bg-[#FBF9F5] border border-[#E5DEC9] rounded-xl text-[#1C1917] focus:outline-none focus:border-[#14362B]"
           >
             <option value="all">Every City ({cityOptions.length})</option>
@@ -657,10 +647,9 @@ export const MemberDirectory: React.FC<MemberDirectoryProps> = ({
               group.members
                 .filter((m) => m.generation <= 2)
                 .slice(0, 2)
-                .map((m) => m.nickname || m.name.split(' ')[0])
+                .map((m) => getShortFirstName(m.name))
                 .join(' & ') ||
-              group.members[0]?.nickname ||
-              group.members[0]?.name.split(' ')[0] ||
+              getShortFirstName(group.members[0]?.name) ||
               'Family Head';
 
             const gens = group.members.map((m) => m.generation).filter(Boolean);
@@ -753,13 +742,11 @@ export const MemberDirectory: React.FC<MemberDirectoryProps> = ({
               <thead>
                 <tr className="bg-[#F4EFE6] text-[#57534E] border-b border-[#E5DEC9] uppercase tracking-wider text-[11px] font-semibold sticky top-0 z-10">
                   <th className="py-3.5 px-4 w-12 text-center">#</th>
-                  <th className="py-3.5 px-4 min-w-[230px]">Member</th>
-                  <th className="py-3.5 px-4 min-w-[170px]">Household</th>
-                  <th className="py-3.5 px-4 min-w-[150px]">Relation to Ammar</th>
-                  <th className="py-3.5 px-4 min-w-[120px]">Gen &amp; Branch</th>
+                  <th className="py-3.5 px-4 min-w-[230px]">Full Name</th>
+                  <th className="py-3.5 px-4 min-w-[160px]">Relation to Ammar</th>
+                  <th className="py-3.5 px-4 min-w-[130px]">Gen &amp; Branch</th>
                   <th className="py-3.5 px-4 min-w-[130px]">Age &amp; DOB</th>
-                  <th className="py-3.5 px-4 min-w-[140px]">Residence</th>
-                  <th className="py-3.5 px-4 min-w-[180px]">Vocation / Role</th>
+                  <th className="py-3.5 px-4 min-w-[150px]">City</th>
                   <th className="py-3.5 px-4 text-right min-w-[160px]">Actions</th>
                 </tr>
               </thead>
@@ -768,6 +755,7 @@ export const MemberDirectory: React.FC<MemberDirectoryProps> = ({
                   const initials = getCleanInitials(p);
                   const rel = getRelationToAmmar(p, people);
                   const isMe = p.id === 'c_ammar';
+                  const cityOnly = normalizeCityName(p.city);
 
                   return (
                     <tr
@@ -806,17 +794,8 @@ export const MemberDirectory: React.FC<MemberDirectoryProps> = ({
                             <div className="font-serif-display font-bold text-sm text-[#1C1917] truncate">
                               {p.name}
                             </div>
-                            {p.nickname &&
-                              p.nickname.toLowerCase() !== p.name.toLowerCase() && (
-                                <div className="text-[11px] text-[#78716C] truncate">
-                                  {p.nickname}
-                                </div>
-                              )}
                           </div>
                         </div>
-                      </td>
-                      <td className="py-3 px-4 text-[#44403C] font-medium">
-                        {p.familyLabel || 'Keluarga'}
                       </td>
                       <td className="py-3 px-4 text-[#14362B] font-medium">{rel.text}</td>
                       <td className="py-3 px-4 text-[#57534E] font-mono-num">
@@ -826,12 +805,7 @@ export const MemberDirectory: React.FC<MemberDirectoryProps> = ({
                         <span className="font-semibold text-[#1C1917]">{p.age} yrs</span>
                         <span className="block text-[11px] text-[#78716C]">{p.dob || '—'}</span>
                       </td>
-                      <td className="py-3 px-4 text-[#44403C]">
-                        {p.city ? p.city.split(',')[0] : '—'}
-                      </td>
-                      <td className="py-3 px-4 text-[#57534E] truncate max-w-[200px]">
-                        {p.profession || 'Family Member'}
-                      </td>
+                      <td className="py-3 px-4 text-[#44403C]">{cityOnly}</td>
                       <td className="py-3 px-4 text-right">
                         <div className="inline-flex items-center gap-1">
                           <button
