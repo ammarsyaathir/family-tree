@@ -24,60 +24,68 @@
   }
 }
 
-/* Custom Hierarchical Family Tree Connectors */
+/* ==========================================================================
+   HIGH-CONTRAST HIERARCHICAL FAMILY TREE CONNECTORS
+   - Horizontal sibling rows (strictly flex-nowrap)
+   - Continuous 2.5px solid warm tree connector lines (#5C4033)
+   - Zero-gap attachment to member cards with anchor nodes
+   ========================================================================== */
 .tree-children-row {
-  display: flex;
+  display: flex !important;
+  flex-direction: row !important;
+  flex-wrap: nowrap !important; /* STRICTLY HORIZONTAL: 2nd, 3rd, 4th gen siblings sit side-by-side! */
   justify-content: center;
   align-items: flex-start;
   position: relative;
-  padding-top: 24px;
+  padding-top: 36px;
+  width: max-content;
+  min-width: 100%;
 }
 
 .tree-child-branch {
-  display: flex;
-  flex-direction: column;
+  display: flex !important;
+  flex-direction: column !important;
   align-items: center;
   position: relative;
-  padding: 0 12px;
+  padding: 0 16px;
+  flex-shrink: 0 !important;
 }
 
-.tree-child-branch::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 1.5px;
-  height: 24px;
-  background-color: #D6CEBE;
-}
-
+/* Horizontal crossbar connecting all sibling branches seamlessly at top: 0 */
 .tree-child-branch::after {
   content: '';
   position: absolute;
   top: 0;
-  height: 1.5px;
-  background-color: #D6CEBE;
+  height: 2.5px;
+  background-color: #5C4033;
   width: 100%;
+  left: 0;
+  z-index: 1;
 }
 
-.tree-child-branch:first-child::after {
-  left: 50%;
-  width: 50%;
+/* First sibling: crossbar starts at child card center (90px) and extends right */
+.tree-child-branch:first-child::after,
+.tree-child-branch.is-first::after {
+  left: 90px;
+  width: calc(100% - 90px);
 }
 
-.tree-child-branch:last-child::after {
-  right: 50%;
-  width: 50%;
+/* Last sibling: crossbar comes from left (0) and stops at child card center (90px) */
+.tree-child-branch:last-child::after,
+.tree-child-branch.is-last::after {
+  left: 0;
+  width: 90px;
 }
 
-.tree-child-branch:only-child::after {
-  display: none;
+/* Only child: no horizontal crossbar needed */
+.tree-child-branch:only-child::after,
+.tree-child-branch.is-only::after {
+  display: none !important;
 }
 
 /* Subtle archival dot-grid canvas for the interactive tree */
 .archival-grid-bg {
   background-color: #FBF9F5;
-  background-image: radial-gradient(#D6CEBE 1px, transparent 1px);
+  background-image: radial-gradient(#C5BAA8 1.5px, transparent 1.5px);
   background-size: 24px 24px;
 }

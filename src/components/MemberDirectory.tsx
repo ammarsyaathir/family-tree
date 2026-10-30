@@ -24,6 +24,7 @@ import {
   CITY_OPTIONS,
   normalizeCityName,
   getShortFirstName,
+  calculateAge,
 } from '../utils/familyUtils';
 
 export interface DirectoryFilters {
@@ -120,16 +121,17 @@ export const MemberDirectory: React.FC<MemberDirectoryProps> = ({
         filters.city === 'all' ||
         cityClean === filters.city.toLowerCase();
 
+      const personAge = calculateAge(p.dob) || p.age || 0;
       const matchCohort =
         !filters.cohort ||
         (filters.cohort === 'elders'
-          ? p.age >= 60
+          ? personAge >= 60
           : filters.cohort === 'adults'
-          ? p.age >= 35 && p.age < 60
+          ? personAge >= 35 && personAge < 60
           : filters.cohort === 'youth'
-          ? p.age >= 18 && p.age < 35
+          ? personAge >= 18 && personAge < 35
           : filters.cohort === 'kids'
-          ? p.age < 18
+          ? personAge < 18
           : true);
 
       return (
@@ -144,9 +146,9 @@ export const MemberDirectory: React.FC<MemberDirectoryProps> = ({
     });
 
     if (filters.sortBy === 'age-desc') {
-      list.sort((a, b) => (b.age || 0) - (a.age || 0));
+      list.sort((a, b) => (calculateAge(b.dob) || b.age || 0) - (calculateAge(a.dob) || a.age || 0));
     } else if (filters.sortBy === 'age-asc') {
-      list.sort((a, b) => (a.age || 0) - (b.age || 0));
+      list.sort((a, b) => (calculateAge(a.dob) || a.age || 0) - (calculateAge(b.dob) || b.age || 0));
     } else if (filters.sortBy === 'name-asc') {
       list.sort((a, b) => a.name.localeCompare(b.name));
     } else if (filters.sortBy === 'family') {
@@ -154,7 +156,7 @@ export const MemberDirectory: React.FC<MemberDirectoryProps> = ({
     } else {
       list.sort((a, b) => {
         if (a.generation !== b.generation) return a.generation - b.generation;
-        return (b.age || 0) - (a.age || 0);
+        return (calculateAge(b.dob) || b.age || 0) - (calculateAge(a.dob) || a.age || 0);
       });
     }
 
@@ -274,10 +276,10 @@ export const MemberDirectory: React.FC<MemberDirectoryProps> = ({
 
             <div className="min-w-0 flex-1">
               <h3
-                className="font-serif-display text-lg font-bold text-[#1C1917] leading-snug line-clamp-2"
+                className="font-serif-display text-lg font-bold text-[#1C1917] leading-snug uppercase tracking-wide truncate"
                 title={p.name}
               >
-                {p.name}
+                {getShortFirstName(p.name)}
               </h3>
 
               {/* Unboxed Static Metadata with Middle Dot Separators */}
@@ -294,7 +296,7 @@ export const MemberDirectory: React.FC<MemberDirectoryProps> = ({
             <div>
               <dt className="text-[10px] uppercase tracking-wider text-[#78716C]">Age &amp; Birth</dt>
               <dd className="mt-0.5 font-mono-num font-medium text-[#1C1917] truncate">
-                {p.age} yrs · {p.dob || 'Unrecorded'}
+                {calculateAge(p.dob) || p.age} yrs · {p.dob || 'Unrecorded'}
               </dd>
             </div>
             <div>
@@ -791,8 +793,8 @@ export const MemberDirectory: React.FC<MemberDirectoryProps> = ({
                             </div>
                           </div>
                           <div className="min-w-0">
-                            <div className="font-serif-display font-bold text-sm text-[#1C1917] truncate">
-                              {p.name}
+                            <div className="font-serif-display font-bold text-sm text-[#1C1917] uppercase tracking-wide truncate">
+                              {getShortFirstName(p.name)}
                             </div>
                           </div>
                         </div>
@@ -802,7 +804,7 @@ export const MemberDirectory: React.FC<MemberDirectoryProps> = ({
                         Gen {p.generation} · <span className="capitalize font-sans">{p.branch}</span>
                       </td>
                       <td className="py-3 px-4 font-mono-num">
-                        <span className="font-semibold text-[#1C1917]">{p.age} yrs</span>
+                        <span className="font-semibold text-[#1C1917]">{calculateAge(p.dob) || p.age} yrs</span>
                         <span className="block text-[11px] text-[#78716C]">{p.dob || '—'}</span>
                       </td>
                       <td className="py-3 px-4 text-[#44403C]">{cityOnly}</td>

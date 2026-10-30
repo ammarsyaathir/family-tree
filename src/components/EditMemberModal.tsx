@@ -112,7 +112,12 @@ export const EditMemberModal: React.FC<EditMemberModalProps> = ({
     }
     isMountedInitRef.current = false;
 
-    setMemberId(initialPerson.id);
+    const resolvedInitId =
+      initialPerson.id && initialPerson.id !== 'undefined'
+        ? initialPerson.id
+        : `member_${Date.now().toString(36)}`;
+
+    setMemberId(resolvedInitId);
     setCreatingMode(isCreating);
     setName(initialPerson.name || '');
     setGender(initialPerson.gender || 'male');
@@ -147,7 +152,7 @@ export const EditMemberModal: React.FC<EditMemberModalProps> = ({
     }, 80);
     return () => window.clearTimeout(t);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isOpen, initialPerson?.id, isCreating]);
+  }, [isOpen, initialPerson?.id]);
 
   // Build current payload helper
   const buildCurrentPayload = (): Partial<FamilyMember> => ({
@@ -412,14 +417,14 @@ export const EditMemberModal: React.FC<EditMemberModalProps> = ({
             <div className="flex-1 w-full grid grid-cols-1 sm:grid-cols-12 gap-3.5">
               <div className="sm:col-span-12">
                 <label className="block text-[11px] uppercase tracking-wider font-semibold text-[#57534E] mb-1">
-                  Full Name *
+                  Name / Surname *
                 </label>
                 <input
                   type="text"
                   required
                   value={name}
                   onChange={(e) => setName(e.target.value)}
-                  placeholder="e.g. Muhammad Ammar Syaathir Bin Abd Rahim"
+                  placeholder="e.g. Shafrah (no patronymic or father name needed)"
                   className="w-full px-3.5 py-2.5 text-sm bg-white border border-[#E5DEC9] rounded-xl text-[#1C1917] focus:outline-none focus:border-[#14362B]"
                 />
               </div>
@@ -448,7 +453,7 @@ export const EditMemberModal: React.FC<EditMemberModalProps> = ({
 
               <div className="sm:col-span-4">
                 <label className="block text-[11px] uppercase tracking-wider font-semibold text-[#57534E] mb-1">
-                  Date of Birth
+                  Date of Birth (DOB)
                 </label>
                 <input
                   type="date"
@@ -460,7 +465,7 @@ export const EditMemberModal: React.FC<EditMemberModalProps> = ({
 
               <div className="sm:col-span-3">
                 <label className="block text-[11px] uppercase tracking-wider font-semibold text-[#57534E] mb-1">
-                  Age (Years)
+                  Age (Years) · Auto
                 </label>
                 <input
                   type="number"
@@ -468,7 +473,7 @@ export const EditMemberModal: React.FC<EditMemberModalProps> = ({
                   max={130}
                   value={age}
                   onChange={(e) => setAge(parseInt(e.target.value, 10) || 0)}
-                  className="w-full px-3 py-2 text-xs font-mono-num font-semibold bg-white border border-[#E5DEC9] rounded-xl text-[#1C1917] focus:outline-none focus:border-[#14362B]"
+                  className="w-full px-3 py-2 text-xs font-mono-num font-semibold bg-[#FBF9F5] border border-[#E5DEC9] rounded-xl text-[#1C1917] focus:outline-none focus:border-[#14362B]"
                 />
               </div>
             </div>

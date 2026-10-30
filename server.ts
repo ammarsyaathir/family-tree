@@ -206,23 +206,58 @@ async function startServer() {
     res.status(201).json({ ok: true, row: newRow, total: rows.length });
   });
 
-  // PATCH or PUT /api/people/:id - Update a family member
+  // PATCH or PUT /api/people/:id - Update or Upsert a family member
   const updateHandler: express.RequestHandler = (req, res) => {
-    const id = String(req.params.id || '').trim();
+    const rawParamId = String(req.params.id || '').trim();
     const body = req.body || {};
     const incomingData = body.data || body;
 
+    const resolvedId =
+      rawParamId && rawParamId !== 'undefined' && rawParamId !== 'null'
+        ? rawParamId
+        : incomingData?.id && incomingData.id !== 'undefined'
+        ? String(incomingData.id).trim()
+        : `member_${Date.now().toString(36)}`;
+
     const rows = loadRows();
-    const idx = rows.findIndex((r) => r.id === id);
+    const idx = rows.findIndex((r) => r.id === resolvedId);
+    const now = new Date().toISOString();
+
     if (idx === -1) {
-      res.status(404).json({ error: `Member ${id} not found` });
+      if (!incomingData || !incomingData.name) {
+        res.status(400).json({ error: 'Member name is required' });
+        return;
+      }
+      const newPerson: FamilyMember = {
+        ...incomingData,
+        id: resolvedId,
+        name: String(incomingData.name).trim(),
+        city: incomingData.city
+          ? String(incomingData.city).split(',')[0].trim()
+          : 'Bandar Saujana Putra',
+        spouses: Array.isArray(incomingData.spouses) ? incomingData.spouses : [],
+        children: Array.isArray(incomingData.children) ? incomingData.children : [],
+      };
+      const newRow: D1Row = {
+        id: resolvedId,
+        data: newPerson,
+        updated_at: now,
+        updated_by: body.updated_by || 'family_archivist',
+      };
+      rows.push(newRow);
+      reconcileRelationships(rows, newPerson);
+      saveRows(rows);
+      res.json({ ok: true, row: newRow, total: rows.length });
       return;
     }
 
     const updatedPerson: FamilyMember = {
       ...rows[idx].data,
       ...incomingData,
-      id,
+      id: resolvedId,
+      city: incomingData.city
+        ? String(incomingData.city).split(',')[0].trim()
+        : rows[idx].data.city || 'Bandar Saujana Putra',
       spouses: Array.isArray(incomingData.spouses)
         ? incomingData.spouses
         : rows[idx].data.spouses || [],
@@ -231,9 +266,8 @@ async function startServer() {
         : rows[idx].data.children || [],
     };
 
-    const now = new Date().toISOString();
     rows[idx] = {
-      id,
+      id: resolvedId,
       data: updatedPerson,
       updated_at: now,
       updated_by: body.updated_by || 'family_archivist',

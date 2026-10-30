@@ -28,13 +28,38 @@ export function normalizeCityName(rawCity?: string): string {
   return cityOnly || 'Bandar Saujana Putra';
 }
 
+export function calculateAge(dob?: string): number {
+  if (!dob) return 0;
+  const trimmed = dob.trim();
+  let birthDate: Date;
+  if (/^\d{4}-\d{2}-\d{2}$/.test(trimmed)) {
+    const [y, m, d] = trimmed.split('-').map(Number);
+    birthDate = new Date(y, m - 1, d);
+  } else if (/^\d{2}-[A-Za-z]{3}-\d{4}$/.test(trimmed)) {
+    const [dayStr, monthStr, yearStr] = trimmed.split('-');
+    const mIdx = MONTHS_LIST.indexOf(monthStr.toUpperCase());
+    birthDate = new Date(Number(yearStr), mIdx >= 0 ? mIdx : 0, Number(dayStr));
+  } else {
+    birthDate = new Date(trimmed);
+  }
+
+  if (isNaN(birthDate.getTime())) return 0;
+  const now = new Date();
+  let age = now.getFullYear() - birthDate.getFullYear();
+  const mDiff = now.getMonth() - birthDate.getMonth();
+  if (mDiff < 0 || (mDiff === 0 && now.getDate() < birthDate.getDate())) {
+    age--;
+  }
+  return Math.max(0, age);
+}
+
 export function getShortFirstName(fullName?: string): string {
   if (!fullName) return 'Member';
-  const beforePatronymic = fullName.split(/\s+(?:Bin|Binti)\s+/i)[0].trim();
-  const cleaned = beforePatronymic
-    .replace(/^(Haji|Hajah|Muhammad|Mohd|Nur|Nurul|Siti)\s+/i, '')
-    .trim();
-  return cleaned || beforePatronymic || fullName;
+  // Strip patronymics (Bin / Binti) and father's name
+  const stripped = fullName.split(/\s+(?:Bin|Binti)\s+/i)[0].trim();
+  // Strip honorific prefixes (Haji, Hajah)
+  const cleaned = stripped.replace(/^(?:Haji|Hajah)\s+/i, '').trim();
+  return cleaned || fullName;
 }
 
 export function getCleanInitials(person: Partial<FamilyMember>): string {
@@ -169,25 +194,11 @@ export function dobToIsoDate(dob?: string): string {
 }
 
 export function isoDateToDisplayDob(isoDate: string): { formattedDob: string; age: number } {
-  if (!isoDate || !/^\d{4}-\d{2}-\d{2}$/.test(isoDate)) {
+  if (!isoDate) {
     return { formattedDob: '', age: 0 };
   }
-  const [yStr, mStr, dStr] = isoDate.split('-');
-  const year = parseInt(yStr, 10);
-  const mIdx = parseInt(mStr, 10) - 1;
-  const day = parseInt(dStr, 10);
-  const monthCode = MONTHS_LIST[mIdx] || 'JAN';
-  const formattedDob = `${String(day).padStart(2, '0')}-${monthCode}-${year}`;
-
-  const now = new Date();
-  let age = now.getFullYear() - year;
-  const mDiff = now.getMonth() - mIdx;
-  if (mDiff < 0 || (mDiff === 0 && now.getDate() < day)) {
-    age--;
-  }
-  if (age < 0) age = 0;
-
-  return { formattedDob, age };
+  const cleanIso = dobToIsoDate(isoDate) || isoDate;
+  return { formattedDob: cleanIso, age: calculateAge(cleanIso) };
 }
 
 export async function cropImageToSquareDataUrl(file: File, size = 480): Promise<string> {
@@ -282,6 +293,96 @@ export function generateCloudflareD1Sql(people: FamilyMember[]): string {
       `INSERT OR REPLACE INTO people (id, data, updated_at, updated_by) VALUES ('${idStr}', '${jsonStr}', '${now}', 'd1_seed');`
     );
   });
+
+  return lines.join('\n');
+}
+
+export function generatePostgresJsonbSql(people: FamilyMember[]): string {
+  const lines: string[] = [
+    '-- ============================================================================',
+    '-- PostgreSQL / Supabase family_members JSONB Schema & Clean Seed Data',
+    `-- Total Family Members: ${people.length}`,
+    '-- ============================================================================',
+    '',
+    '-- 1. Table Creation',
+    'CREATE TABLE IF NOT EXISTS public.family_members (',
+    '    id VARCHAR(50) PRIMARY KEY,',
+    '    data JSONB NOT NULL,',
+    '    updated_by VARCHAR(60) DEFAULT \'System\',',
+    '    created_at TIMESTAMPTZ NOT NULL DEFAULT timezone(\'utc\'::text, now()),',
+    '    updated_at TIMESTAMPTZ NOT NULL DEFAULT timezone(\'utc\'::text, now())',
+    ');',
+    '',
+    '-- 2. Trigger Function for Updated Timestamps',
+    'CREATE OR REPLACE FUNCTION trigger_set_timestamp()',
+    'RETURNS TRIGGER AS $$',
+    'BEGIN',
+    '  NEW.updated_at = NOW();',
+    '  RETURN NEW;',
+    'END;',
+    '$$ LANGUAGE plpgsql;',
+    '',
+    'DROP TRIGGER IF EXISTS set_timestamp ON public.family_members;',
+    '',
+    'CREATE TRIGGER set_timestamp',
+    'BEFORE UPDATE ON public.family_members',
+    'FOR EACH ROW',
+    'EXECUTE FUNCTION trigger_set_timestamp();',
+    '',
+    '-- 3. Row Level Security (RLS) Policies for Public Web Access',
+    'ALTER TABLE public.family_members ENABLE ROW LEVEL SECURITY;',
+    '',
+    'DO $$',
+    'BEGIN',
+    '    IF NOT EXISTS (',
+    '        SELECT 1 FROM pg_policies',
+    '        WHERE tablename = \'family_members\' AND policyname = \'Allow public read access\'',
+    '    ) THEN',
+    '        CREATE POLICY "Allow public read access"',
+    '        ON public.family_members FOR SELECT USING (true);',
+    '    END IF;',
+    '',
+    '    IF NOT EXISTS (',
+    '        SELECT 1 FROM pg_policies',
+    '        WHERE tablename = \'family_members\' AND policyname = \'Allow public write access\'',
+    '    ) THEN',
+    '        CREATE POLICY "Allow public write access"',
+    '        ON public.family_members FOR ALL USING (true) WITH CHECK (true);',
+    '    END IF;',
+    'END $$;',
+    '',
+    '-- 4. Clean Insert / Upsert Family Records',
+    'INSERT INTO public.family_members (id, data) VALUES',
+  ];
+
+  const valueRows = people.map((p, idx) => {
+    // Standard clean data payload
+    const dataObj = {
+      name: p.name,
+      gender: p.gender,
+      dob: p.dob,
+      familyLabel: p.familyLabel,
+      isInLaw: Boolean(p.isInLaw),
+      avatar: p.avatar || null,
+      generation: p.generation,
+      city: normalizeCityName(p.city),
+      fatherId: p.fatherId || null,
+      motherId: p.motherId || null,
+      spouses: p.spouses || [],
+      children: p.children || [],
+    };
+    const jsonStr = JSON.stringify(dataObj).replace(/'/g, "''");
+    const isLast = idx === people.length - 1;
+    return `('${p.id}', '${jsonStr}'::jsonb)${isLast ? '' : ','}`;
+  });
+
+  lines.push(...valueRows);
+  lines.push(
+    'ON CONFLICT (id) DO UPDATE',
+    'SET data = EXCLUDED.data,',
+    "    updated_at = timezone('utc'::text, now()),",
+    "    updated_by = 'System';"
+  );
 
   return lines.join('\n');
 }

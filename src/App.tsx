@@ -132,8 +132,10 @@ export default function App() {
   }, [people]);
 
   const handleOpenCreateModal = (defaults?: Partial<FamilyMember>) => {
+    const generatedId = `member_${Date.now().toString(36)}`;
     setIsCreatingMember(true);
     setEditingPerson({
+      id: generatedId,
       name: '',
       age: 20,
       dob: '',
@@ -186,17 +188,21 @@ export default function App() {
       delete cleanData._updatedAt;
       delete cleanData._updatedBy;
 
+      const resolvedId =
+        cleanData.id && cleanData.id !== 'undefined'
+          ? String(cleanData.id)
+          : `member_${Date.now().toString(36)}`;
+
       if (creating) {
-        const newId = String(cleanData.id || `member_${Date.now().toString(36)}`);
         const fullMember: FamilyMember = {
           ...(cleanData as FamilyMember),
-          id: newId,
+          id: resolvedId,
         };
         const res = await fetch('/api/people', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
-            id: newId,
+            id: resolvedId,
             data: fullMember,
             updated_by: 'archivist',
           }),
@@ -212,16 +218,17 @@ export default function App() {
             'success'
           );
         } else {
+          setEditingPerson((prev) => (prev ? { ...prev, id: resolvedId } : prev));
           setIsCreatingMember(false);
         }
-        return newId;
+        return resolvedId;
       } else {
-        const targetId = String(personData.id);
-        const res = await fetch(`/api/people/${encodeURIComponent(targetId)}`, {
+        const res = await fetch(`/api/people/${encodeURIComponent(resolvedId)}`, {
           method: 'PATCH',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
-            data: cleanData,
+            id: resolvedId,
+            data: { ...cleanData, id: resolvedId },
             updated_by: 'archivist',
           }),
         });
@@ -235,7 +242,7 @@ export default function App() {
             'success'
           );
         }
-        return targetId;
+        return resolvedId;
       }
     } catch (err: any) {
       console.error('Save error:', err);

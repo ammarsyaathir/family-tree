@@ -18,6 +18,7 @@ import {
   getRelationToAmmar,
   getDynamicChildrenForCouple,
   getShortFirstName,
+  calculateAge,
 } from '../utils/familyUtils';
 
 interface FamilyTreeCanvasProps {
@@ -122,7 +123,14 @@ export const FamilyTreeCanvas: React.FC<FamilyTreeCanvasProps> = ({
     return 'bg-[#F9EFEF] text-[#9A3412] border-[#9A3412]/20';
   };
 
-  const renderMemberCard = (person: FamilyMember | undefined, customRoleLabel?: string) => {
+  const renderMemberCard = (
+    person: FamilyMember | undefined,
+    customRoleLabel?: string,
+    options?: {
+      hasTopConnector?: boolean;
+      hasBottomConnector?: boolean;
+    }
+  ) => {
     if (!person) return null;
     const isMe = person.id === 'c_ammar';
     const isSpotlight = activeHighlightId === person.id;
@@ -135,7 +143,7 @@ export const FamilyTreeCanvas: React.FC<FamilyTreeCanvasProps> = ({
         key={person.id}
         data-tree-node-id={person.id}
         onClick={() => onSelectPerson(person)}
-        className={`group relative flex flex-col items-center text-center w-[144px] sm:w-[154px] p-3 rounded-xl border transition-all duration-150 cursor-pointer select-none shadow-2xs hover:shadow-md hover:-translate-y-1 ${getBranchAccent(
+        className={`group relative flex flex-col items-center text-center w-[148px] p-3 rounded-xl border-2 transition-all duration-150 cursor-pointer select-none shadow-2xs hover:shadow-md hover:-translate-y-0.5 ${getBranchAccent(
           person.branch,
           isMe
         )} ${
@@ -144,6 +152,22 @@ export const FamilyTreeCanvas: React.FC<FamilyTreeCanvasProps> = ({
             : ''
         }`}
       >
+        {/* Top Connector Anchor Pip - Physically touches the incoming parent drop line */}
+        {options?.hasTopConnector && (
+          <span
+            className="absolute -top-[5px] left-1/2 -translate-x-1/2 w-2.5 h-2.5 rounded-full bg-[#5C4033] border-2 border-white shadow-2xs z-20 pointer-events-none"
+            aria-hidden="true"
+          />
+        )}
+
+        {/* Bottom Connector Anchor Pip - Physically touches the outgoing children descent line */}
+        {options?.hasBottomConnector && (
+          <span
+            className="absolute -bottom-[5px] left-1/2 -translate-x-1/2 w-2.5 h-2.5 rounded-full bg-[#5C4033] border-2 border-white shadow-2xs z-20 pointer-events-none"
+            aria-hidden="true"
+          />
+        )}
+
         {/* Quick Add Child button on hover */}
         <button
           type="button"
@@ -177,27 +201,21 @@ export const FamilyTreeCanvas: React.FC<FamilyTreeCanvasProps> = ({
         </div>
 
         {/* Role & Name */}
-        <div className="mt-2.5 text-[10px] font-medium text-[#78716C] tracking-wide truncate max-w-full">
+        <div className="mt-2 text-[10px] font-medium text-[#78716C] tracking-wide truncate max-w-full">
           {isMe ? 'Archivist · Me' : roleLabel}
         </div>
         <div
-          className="mt-0.5 text-xs font-semibold text-[#1C1917] leading-snug line-clamp-1 max-w-full"
+          className="mt-0.5 text-xs font-bold text-[#1C1917] tracking-wider uppercase leading-snug truncate max-w-full"
           title={person.name}
         >
           {getShortFirstName(person.name)}
-        </div>
-        <div
-          className="text-[11px] text-[#57534E] truncate max-w-full"
-          title={person.name}
-        >
-          {person.name}
         </div>
 
         {/* Unboxed metadata with middle dot separator */}
         <div className="mt-1 flex items-center justify-center gap-1 text-[10px] text-[#78716C] font-mono-num">
           <span>Gen {person.generation}</span>
           <span aria-hidden="true">·</span>
-          <span>{typeof person.age === 'number' ? `${person.age}y` : '—'}</span>
+          <span>{person.dob ? `${calculateAge(person.dob)}y` : (typeof person.age === 'number' ? `${person.age}y` : '—')}</span>
         </div>
       </div>
     );
@@ -206,12 +224,17 @@ export const FamilyTreeCanvas: React.FC<FamilyTreeCanvasProps> = ({
   /**
    * Recursive family branch renderer:
    * Given a primary person, automatically finds their spouse(s) and all children dynamically!
+   * Every line physically connects to the cards without floating gaps.
    */
   const renderDynamicBranch = (
     primaryPerson: FamilyMember,
     visitedIds: Set<string>,
     depth = 0,
-    customOption?: { excludeChildId?: string; highlightBox?: boolean }
+    customOption?: {
+      excludeChildId?: string;
+      highlightBox?: boolean;
+      hasParentAbove?: boolean;
+    }
   ): React.ReactNode => {
     if (!primaryPerson || visitedIds.has(primaryPerson.id) || depth > 6) return null;
     visitedIds.add(primaryPerson.id);
@@ -232,29 +255,49 @@ export const FamilyTreeCanvas: React.FC<FamilyTreeCanvasProps> = ({
       primaryPerson.id === 'd_dad' ||
       primaryPerson.id === 'm_shafrah' ||
       customOption?.highlightBox;
+    const hasParentAbove = Boolean(customOption?.hasParentAbove);
+    const hasSpouse = spouses.length > 0;
 
     return (
-      <div key={primaryPerson.id} className="flex flex-col items-center relative px-2 py-1">
-        {/* Couple or Single Parent Box */}
+      <div key={primaryPerson.id} className="flex flex-col items-center relative">
+        {/* Couple or Single Parent Row - Flush zero-gap connection between cards and marriage line */}
         <div
-          className={`flex items-start relative gap-7 p-2 rounded-2xl ${
+          className={`flex items-center justify-center relative rounded-2xl ${
             isCoreCouple
-              ? 'bg-[#FDFBF7] border border-[#B47B2B]/45 shadow-sm'
-              : ''
+              ? 'p-2 bg-[#FDFBF7] border-2 border-[#B47B2B] shadow-sm'
+              : 'p-0'
           }`}
         >
-          {renderMemberCard(primaryPerson)}
+          {/* Primary Person Card (Direct Blood Descendant) */}
+          <div className="relative shrink-0">
+            {/* Direct vertical line rising 36px from card top border up to the horizontal sibling crossbar */}
+            {hasParentAbove && (
+              <div className="absolute bottom-full left-1/2 -translate-x-1/2 w-[2.5px] h-9 bg-[#5C4033] z-10 pointer-events-none" />
+            )}
+            {renderMemberCard(primaryPerson, undefined, {
+              hasTopConnector: hasParentAbove,
+              hasBottomConnector: allChildren.length > 0 && !hasSpouse,
+            })}
+          </div>
 
+          {/* Continuous marriage line spanning horizontally and touching both cards flush */}
           {spouses.map((spouse) => (
             <React.Fragment key={spouse.id}>
-              <div className="self-center flex items-center justify-center relative -mx-4 z-1">
-                <div className="w-8 h-[1.5px] bg-[#D6CEBE] flex items-center justify-center">
-                  <span className="w-5 h-5 rounded-full bg-white border border-[#D6CEBE] flex items-center justify-center text-[#9A3412] shadow-2xs">
-                    <Heart className="w-2.5 h-2.5 fill-current" />
-                  </span>
-                </div>
+              <div className="relative flex items-center justify-center shrink-0 w-12 h-[2.5px] bg-[#5C4033] z-10">
+                <span className="w-5 h-5 rounded-full bg-white border-2 border-[#5C4033] flex items-center justify-center text-[#9A3412] shadow-2xs shrink-0 relative z-20">
+                  <Heart className="w-2.5 h-2.5 fill-current" />
+                </span>
+                {/* Outgoing vertical line dropping from heart badge down between the couple */}
+                {allChildren.length > 0 && (
+                  <div className="absolute top-1/2 left-1/2 -translate-x-1/2 w-[2.5px] h-20 bg-[#5C4033] pointer-events-none z-10" />
+                )}
               </div>
-              {renderMemberCard(spouse)}
+              <div className="relative shrink-0">
+                {renderMemberCard(spouse, undefined, {
+                  hasTopConnector: false,
+                  hasBottomConnector: false,
+                })}
+              </div>
             </React.Fragment>
           ))}
         </div>
@@ -262,37 +305,51 @@ export const FamilyTreeCanvas: React.FC<FamilyTreeCanvasProps> = ({
         {/* Children Connector & Toggle */}
         {allChildren.length > 0 && (
           <>
-            <div className="flex flex-col items-center relative z-2">
-              <div className="w-[1.5px] h-6 bg-[#D6CEBE]" />
+            <div className="flex flex-col items-center relative z-10">
+              {/* Vertical line connecting from bottom of card/couple directly into toggle button */}
+              <div className="w-[2.5px] h-6 bg-[#5C4033]" />
               <button
                 type="button"
                 onClick={() => toggleBranch(branchKey)}
-                className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-lg border text-[11px] font-medium transition-colors shadow-2xs font-mono-num whitespace-nowrap ${
+                className={`inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg border-2 text-[11px] font-bold transition-all shadow-xs font-mono-num whitespace-nowrap ${
                   isCollapsed
-                    ? 'bg-[#F4EFE6] border-[#D6CEBE] text-[#57534E] hover:bg-[#14362B] hover:text-white'
+                    ? 'bg-[#F4EFE6] border-[#5C4033]/60 text-[#57534E] hover:bg-[#14362B] hover:text-white hover:border-[#14362B]'
                     : isCoreCouple
-                    ? 'bg-[#FEF6E6] border-[#B47B2B]/50 text-[#784F14] hover:bg-[#B47B2B] hover:text-white'
-                    : 'bg-white border-[#D6CEBE] text-[#1C1917] hover:bg-[#14362B] hover:text-white'
+                    ? 'bg-[#FEF6E6] border-[#B47B2B] text-[#784F14] hover:bg-[#B47B2B] hover:text-white'
+                    : 'bg-white border-[#5C4033] text-[#1C1917] hover:bg-[#14362B] hover:text-white'
                 }`}
               >
                 {isCollapsed ? (
-                  <Plus className="w-3 h-3" />
+                  <Plus className="w-3.5 h-3.5 text-[#9A3412]" />
                 ) : (
-                  <Minus className="w-3 h-3" />
+                  <Minus className="w-3.5 h-3.5 text-[#14362B]" />
                 )}
                 <span>
                   {allChildren.length} {allChildren.length === 1 ? 'Child' : 'Children'}
                 </span>
               </button>
+              {/* Connector line dropping 36px directly into the horizontal sibling crossbar */}
+              {!isCollapsed && <div className="w-[2.5px] h-9 bg-[#5C4033]" />}
             </div>
 
             {!isCollapsed && (
               <div className="tree-children-row">
-                {allChildren.map((child) => (
-                  <div key={child.id} className="tree-child-branch">
-                    {renderDynamicBranch(child, visitedIds, depth + 1)}
-                  </div>
-                ))}
+                {allChildren.map((child, index) => {
+                  const isFirst = index === 0;
+                  const isLast = index === allChildren.length - 1;
+                  const isOnly = allChildren.length === 1;
+
+                  return (
+                    <div
+                      key={child.id}
+                      className={`tree-child-branch ${isFirst ? 'is-first' : ''} ${isLast ? 'is-last' : ''} ${isOnly ? 'is-only' : ''}`}
+                    >
+                      {renderDynamicBranch(child, visitedIds, depth + 1, {
+                        hasParentAbove: true,
+                      })}
+                    </div>
+                  );
+                })}
               </div>
             )}
           </>
@@ -320,11 +377,11 @@ export const FamilyTreeCanvas: React.FC<FamilyTreeCanvasProps> = ({
     if (unvisitedRoots.length === 0) return null;
 
     return (
-      <div className="mt-10 pt-8 border-t border-[#E5DEC9] flex flex-col items-center">
-        <div className="text-xs font-medium text-[#78716C] mb-4">
+      <div className="mt-12 pt-8 border-t-2 border-dashed border-[#5C4033]/30 flex flex-col items-center w-max min-w-full">
+        <div className="text-xs uppercase tracking-widest font-bold text-[#78716C] mb-4 px-3 py-1 bg-white border border-[#E5DEC9] rounded-full">
           Additional Documented Family Branches ({unvisitedRoots.length})
         </div>
-        <div className="flex flex-wrap justify-center gap-8">
+        <div className="flex flex-row flex-nowrap justify-center gap-10">
           {unvisitedRoots.map((rootPerson) =>
             renderDynamicBranch(rootPerson, visitedIds, 0)
           )}
@@ -348,66 +405,90 @@ export const FamilyTreeCanvas: React.FC<FamilyTreeCanvasProps> = ({
     if (noraini) visited.add(noraini.id);
 
     return (
-      <div className="flex flex-col items-center">
-        {/* Grandparents Row */}
-        <div className="flex flex-wrap lg:flex-nowrap justify-center gap-12 lg:gap-24 items-end">
+      <div className="flex flex-col items-center w-max min-w-full">
+        {/* Grandparents Row (Strictly horizontal side-by-side) */}
+        <div className="flex flex-row flex-nowrap justify-center gap-20 lg:gap-32 items-start">
+          {/* Paternal Grandparents (Dad's Parents: Isa & Zaharah) */}
           {isa && (
             <div className="flex flex-col items-center">
-              <div className="text-[11px] font-semibold text-[#9A3412] tracking-wide mb-2">
+              <div className="text-[11px] font-bold text-[#9A3412] uppercase tracking-wider mb-2">
                 Paternal Grandparents (Dad&apos;s Side)
               </div>
-              <div className="flex items-center gap-6 p-2 rounded-2xl bg-white/80 border border-[#E5DEC9]">
-                {renderMemberCard(isa, 'Grandfather')}
+              <div className="flex items-center justify-center relative">
+                <div className="relative shrink-0">
+                  {renderMemberCard(isa, 'Grandfather', {
+                    hasTopConnector: false,
+                    hasBottomConnector: true,
+                  })}
+                </div>
                 {zaharah && (
                   <>
-                    <div className="w-6 h-[1.5px] bg-[#D6CEBE] flex items-center justify-center -mx-3 z-1">
-                      <span className="w-5 h-5 rounded-full bg-white border border-[#D6CEBE] flex items-center justify-center text-[#9A3412]">
+                    <div className="relative flex items-center justify-center shrink-0 w-12 h-[2.5px] bg-[#5C4033] z-10">
+                      <span className="w-5 h-5 rounded-full bg-white border-2 border-[#5C4033] flex items-center justify-center text-[#9A3412] shadow-2xs shrink-0 relative z-20">
                         <Heart className="w-2.5 h-2.5 fill-current" />
                       </span>
                     </div>
-                    {renderMemberCard(zaharah, 'Grandmother')}
+                    <div className="relative shrink-0">
+                      {renderMemberCard(zaharah, 'Grandmother', {
+                        hasTopConnector: false,
+                        hasBottomConnector: false,
+                      })}
+                    </div>
                   </>
                 )}
               </div>
-              <div className="w-[1.5px] h-8 bg-[#D6CEBE]" />
+              {/* Direct vertical line dropping straight from Isa down toward Dad */}
+              <div className="w-[2.5px] h-12 bg-[#5C4033]" />
             </div>
           )}
 
+          {/* Maternal Grandparents (Mom's Parents: Zain & Noraini) */}
           {zain && (
             <div className="flex flex-col items-center">
-              <div className="text-[11px] font-semibold text-[#1E4E5F] tracking-wide mb-2">
+              <div className="text-[11px] font-bold text-[#1E4E5F] uppercase tracking-wider mb-2">
                 Maternal Grandparents (Mom&apos;s Side)
               </div>
-              <div className="flex items-center gap-6 p-2 rounded-2xl bg-white/80 border border-[#E5DEC9]">
-                {renderMemberCard(zain, 'Grandfather')}
+              <div className="flex items-center justify-center relative">
+                <div className="relative shrink-0">
+                  {renderMemberCard(zain, 'Grandfather', {
+                    hasTopConnector: false,
+                    hasBottomConnector: true,
+                  })}
+                </div>
                 {noraini && (
                   <>
-                    <div className="w-6 h-[1.5px] bg-[#D6CEBE] flex items-center justify-center -mx-3 z-1">
-                      <span className="w-5 h-5 rounded-full bg-white border border-[#D6CEBE] flex items-center justify-center text-[#1E4E5F]">
+                    <div className="relative flex items-center justify-center shrink-0 w-12 h-[2.5px] bg-[#5C4033] z-10">
+                      <span className="w-5 h-5 rounded-full bg-white border-2 border-[#5C4033] flex items-center justify-center text-[#1E4E5F] shadow-2xs shrink-0 relative z-20">
                         <Heart className="w-2.5 h-2.5 fill-current" />
                       </span>
                     </div>
-                    {renderMemberCard(noraini, 'Grandmother')}
+                    <div className="relative shrink-0">
+                      {renderMemberCard(noraini, 'Grandmother', {
+                        hasTopConnector: false,
+                        hasBottomConnector: false,
+                      })}
+                    </div>
                   </>
                 )}
               </div>
-              <div className="w-[1.5px] h-8 bg-[#D6CEBE]" />
+              {/* Direct vertical line dropping straight from Zain down toward Mom */}
+              <div className="w-[2.5px] h-12 bg-[#5C4033]" />
             </div>
           )}
         </div>
 
-        {/* Horizontal Bridge connecting Paternal & Maternal Grandparents to Parents */}
-        <div className="w-48 sm:w-80 h-[1.5px] bg-[#D6CEBE]" />
-        <div className="w-[1.5px] h-6 bg-[#D6CEBE]" />
+        {/* Clear solid horizontal bridge connecting Grandparents down to Dad & Mom */}
+        <div className="w-[calc(100%-148px)] max-w-2xl h-[2.5px] bg-[#5C4033]" />
+        <div className="w-[2.5px] h-9 bg-[#5C4033]" />
 
-        {/* Core Immediate Family Root (Dad & Mom -> All Children -> All Grandchildren) */}
+        {/* Core Immediate Family (Dad & Mom -> 3rd Gen children: Along Asyraf, Aliah, Aqilah, Adilah, Ammar horizontally!) */}
         {dad
-          ? renderDynamicBranch(dad, visited, 1, { highlightBox: true })
+          ? renderDynamicBranch(dad, visited, 1, { highlightBox: true, hasParentAbove: true })
           : mom
-          ? renderDynamicBranch(mom, visited, 1, { highlightBox: true })
+          ? renderDynamicBranch(mom, visited, 1, { highlightBox: true, hasParentAbove: true })
           : null}
 
-        {/* Any additional immediate family members not yet visited */}
+        {/* Any additional immediate family members */}
         {renderUnvisitedRoots(visited, 'immediate')}
       </div>
     );
@@ -417,7 +498,7 @@ export const FamilyTreeCanvas: React.FC<FamilyTreeCanvasProps> = ({
     const visited = new Set<string>();
     const isa = byId.get('p_isa');
     return (
-      <div className="flex flex-col items-center">
+      <div className="flex flex-col items-center w-max min-w-full">
         {isa && renderDynamicBranch(isa, visited, 0)}
         {renderUnvisitedRoots(visited, 'paternal')}
       </div>
@@ -428,7 +509,7 @@ export const FamilyTreeCanvas: React.FC<FamilyTreeCanvasProps> = ({
     const visited = new Set<string>();
     const zain = byId.get('m_zain');
     return (
-      <div className="flex flex-col items-center">
+      <div className="flex flex-col items-center w-max min-w-full">
         {zain && renderDynamicBranch(zain, visited, 0)}
         {renderUnvisitedRoots(visited, 'maternal')}
       </div>
@@ -440,17 +521,17 @@ export const FamilyTreeCanvas: React.FC<FamilyTreeCanvasProps> = ({
     const isa = byId.get('p_isa');
     const zain = byId.get('m_zain');
     return (
-      <div className="flex flex-col gap-12 items-center">
+      <div className="flex flex-col gap-16 items-center w-max min-w-full">
         <div className="flex flex-col items-center">
-          <div className="text-xs font-semibold text-[#9A3412] tracking-wide mb-3">
-            Paternal Lineage Archive (Atok Isa &amp; Nenek Zaharah + Core Family)
+          <div className="text-xs uppercase tracking-widest font-bold text-[#9A3412] mb-3 px-4 py-1.5 rounded-full bg-[#9A3412]/10 border border-[#9A3412]/20">
+            Paternal Lineage Archive (Dad&apos;s Side: Atok Isa &amp; Nenek Zaharah)
           </div>
           {isa && renderDynamicBranch(isa, visited, 0)}
         </div>
 
-        <div className="w-full border-t border-[#E5DEC9] pt-10 flex flex-col items-center">
-          <div className="text-xs font-semibold text-[#1E4E5F] tracking-wide mb-3">
-            Maternal Lineage Archive (Atok Zain &amp; Nenek Noraini)
+        <div className="w-full border-t-2 border-dashed border-[#5C4033]/30 pt-12 flex flex-col items-center">
+          <div className="text-xs uppercase tracking-widest font-bold text-[#1E4E5F] mb-3 px-4 py-1.5 rounded-full bg-[#1E4E5F]/10 border border-[#1E4E5F]/20">
+            Maternal Lineage Archive (Mom&apos;s Side: Atok Zain &amp; Nenek Noraini)
           </div>
           {zain &&
             renderDynamicBranch(zain, visited, 0, {

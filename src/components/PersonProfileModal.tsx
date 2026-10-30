@@ -22,6 +22,7 @@ import {
   cropImageToSquareDataUrl,
   normalizeCityName,
   getShortFirstName,
+  calculateAge,
 } from '../utils/familyUtils';
 
 interface PersonProfileModalProps {
@@ -143,11 +144,11 @@ export const PersonProfileModal: React.FC<PersonProfileModalProps> = ({
           <div className="text-[10px] uppercase tracking-wider text-[#78716C] font-semibold">
             {relationshipTag}
           </div>
-          <div className="text-xs font-semibold text-[#1C1917] truncate group-hover:text-[#14362B]">
-            {relMember.name}
+          <div className="text-xs font-bold text-[#1C1917] uppercase tracking-wide truncate group-hover:text-[#14362B]">
+            {getShortFirstName(relMember.name)}
           </div>
           <div className="text-[11px] text-[#57534E] font-mono-num">
-            Gen {relMember.generation} · {relMember.age} yrs
+            Gen {relMember.generation} · {calculateAge(relMember.dob) || relMember.age} yrs
           </div>
         </div>
         <ChevronRight className="w-4 h-4 text-[#78716C] group-hover:translate-x-0.5 transition-transform shrink-0" />
@@ -252,9 +253,9 @@ export const PersonProfileModal: React.FC<PersonProfileModalProps> = ({
 
               <h2
                 id="profile-modal-title"
-                className="mt-1 font-serif-display text-2xl sm:text-3xl font-bold text-[#1C1917] leading-tight"
+                className="mt-1 font-serif-display text-2xl sm:text-3xl font-bold text-[#1C1917] uppercase tracking-wide leading-tight"
               >
-                {person.name}
+                {getShortFirstName(person.name)}
               </h2>
 
               <div className="mt-2 flex flex-wrap items-center justify-center sm:justify-start gap-2 text-xs text-[#78716C] font-mono-num">
@@ -262,7 +263,7 @@ export const PersonProfileModal: React.FC<PersonProfileModalProps> = ({
                 <span aria-hidden="true">·</span>
                 <span className="capitalize font-sans">{person.branch} Lineage</span>
                 <span aria-hidden="true">·</span>
-                <span>{person.age} years old</span>
+                <span>{calculateAge(person.dob) || person.age} years old</span>
                 <span aria-hidden="true">·</span>
                 <span className="capitalize font-sans">{person.gender}</span>
               </div>
@@ -286,7 +287,7 @@ export const PersonProfileModal: React.FC<PersonProfileModalProps> = ({
                 {person.dob || 'Date unrecorded'}
               </div>
               <div className="text-xs text-[#57534E] font-mono-num mt-0.5">
-                {person.age} years old
+                {calculateAge(person.dob) || person.age} years old
               </div>
             </div>
 

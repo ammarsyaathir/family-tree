@@ -9,7 +9,7 @@ import {
   ChevronRight,
 } from 'lucide-react';
 import { FamilyMember, DEFAULT_HOUSEHOLDS } from '../types/family';
-import { MONTHS_LIST, getShortFirstName, normalizeCityName } from '../utils/familyUtils';
+import { MONTHS_LIST, getShortFirstName, normalizeCityName, calculateAge } from '../utils/familyUtils';
 import { DirectoryFilters } from './MemberDirectory';
 
 interface HeritageStatsProps {
@@ -32,8 +32,8 @@ export const HeritageStats: React.FC<HeritageStatsProps> = ({
     const immediateCount = people.filter((p) => p.branch === 'immediate').length;
 
     const validAges = people
-      .map((p) => p.age)
-      .filter((a) => typeof a === 'number' && !isNaN(a));
+      .map((p) => calculateAge(p.dob) ?? p.age)
+      .filter((a) => typeof a === 'number' && !isNaN(a) && a >= 0) as number[];
     const avgAge = validAges.length
       ? (validAges.reduce((a, b) => a + b, 0) / validAges.length).toFixed(1)
       : '0.0';
@@ -49,10 +49,16 @@ export const HeritageStats: React.FC<HeritageStatsProps> = ({
     const maxGenNumber = Math.max(4, ...Array.from(genMap.keys()));
 
     // Age Cohorts
-    const elders = people.filter((p) => p.age >= 60).length;
-    const adults = people.filter((p) => p.age >= 35 && p.age < 60).length;
-    const youth = people.filter((p) => p.age >= 18 && p.age < 35).length;
-    const kids = people.filter((p) => p.age < 18).length;
+    const elders = people.filter((p) => (calculateAge(p.dob) ?? p.age ?? 0) >= 60).length;
+    const adults = people.filter((p) => {
+      const a = calculateAge(p.dob) ?? p.age ?? 0;
+      return a >= 35 && a < 60;
+    }).length;
+    const youth = people.filter((p) => {
+      const a = calculateAge(p.dob) ?? p.age ?? 0;
+      return a >= 18 && a < 35;
+    }).length;
+    const kids = people.filter((p) => (calculateAge(p.dob) ?? p.age ?? 0) < 18).length;
 
     // Households
     const unitMap = new Map<
@@ -566,11 +572,11 @@ export const HeritageStats: React.FC<HeritageStatsProps> = ({
                 <Cake className="w-4 h-4" />
               </div>
               <div className="min-w-0 flex-1">
-                <div className="text-xs font-semibold text-[#1C1917] truncate">
-                  {person.name}
+                <div className="text-xs font-bold text-[#1C1917] truncate uppercase tracking-wide">
+                  {getShortFirstName(person.name)}
                 </div>
                 <div className="text-[11px] text-[#57534E] font-mono-num">
-                  {dateText} · Turning {(person.age || 0) + 1} yrs
+                  {dateText} · Turning {(calculateAge(person.dob) ?? person.age ?? 0) + 1} yrs
                 </div>
               </div>
             </button>
