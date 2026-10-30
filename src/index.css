@@ -1,0 +1,83 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    --font-serif: 'Cormorant Garamond', Georgia, serif;
+    --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+    --font-mono: 'JetBrains Mono', monospace;
+  }
+
+  body {
+    font-family: var(--font-sans);
+    background-color: #FBF9F5;
+    color: #1C1917;
+    overflow-x: hidden;
+  }
+
+  h1, h2, h3, .font-serif-display {
+    font-family: var(--font-serif);
+  }
+
+  .font-mono-num {
+    font-family: var(--font-mono);
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+/* Custom Hierarchical Family Tree Connectors */
+.tree-children-row {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  position: relative;
+  padding-top: 24px;
+}
+
+.tree-child-branch {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  padding: 0 12px;
+}
+
+.tree-child-branch::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 1.5px;
+  height: 24px;
+  background-color: #D6CEBE;
+}
+
+.tree-child-branch::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  height: 1.5px;
+  background-color: #D6CEBE;
+  width: 100%;
+}
+
+.tree-child-branch:first-child::after {
+  left: 50%;
+  width: 50%;
+}
+
+.tree-child-branch:last-child::after {
+  right: 50%;
+  width: 50%;
+}
+
+.tree-child-branch:only-child::after {
+  display: none;
+}
+
+/* Subtle archival dot-grid canvas for the interactive tree */
+.archival-grid-bg {
+  background-color: #FBF9F5;
+  background-image: radial-gradient(#D6CEBE 1px, transparent 1px);
+  background-size: 24px 24px;
+}

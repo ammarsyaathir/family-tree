@@ -1,0 +1,6 @@
+{
+  "name": "Ammar Syaathir Family Heritage Archive",
+  "description": "Interactive four-generation family tree, dynamic member directory, demographic analytics, and Cloudflare D1 / JSON profile management system.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
