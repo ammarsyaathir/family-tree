@@ -4,5 +4,5 @@ pages_build_output_dir = "dist"
 
 [[d1_databases]]
 binding = "DB"
-database_name = "ammar-family-d1"
-database_id = "replace-with-your-cloudflare-d1-database-id"
+database_name = "family-heritage"
+database_id = "479fa1f1-aac6-44bd-b298-93679e0aed9d"

@@ -1,0 +1,2833 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#14362B">
+<title>Directory | Ammar Syaathir Family Heritage Archive</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+<link rel="icon" type="image/svg+xml" href="/public/favicon.svg?v=2">
+<style>
+:root{--ruby:          #14362B;
+  --ruby-deep:     #0E2A21;
+  --ruby-mid:      #2F6B55;
+  --ruby-soft:     #2F6B55;
+  --amber:         #B58B3F;
+  --amber-pale:    #E6D2A0;
+  --amber-muted:   #f0e4c0;
+  --cream:         #FBF9F5;
+  --cream-dark:    #ECE6D8;
+  --ink:           #12100e;
+  --ink-mid:       #2c2420;
+  --ink-soft:      #584e47;
+  --muted:         #8c7f76;
+  --faint:         #c4bab2;
+
+  
+  --male-bg:       #dbeafe;
+  --male-fg:       #1d4ed8;
+  --female-bg:     #fce7f3;
+  --female-fg:     #9d174d;
+
+  
+  --paternal:      #14362B;
+  --maternal:      #196a5c;
+  --maternal-bg:   #d1fae5;
+  --immediate:     #B58B3F;
+
+  
+  --bg:            #faf8f5;
+  --surface:       #ffffff;
+  --surface-raised: #FFFFFF;
+  --border:        rgba(20,54,43, .12);
+  --border-strong: rgba(20,54,43, .26);
+  --glass:         rgba(255, 255, 255, .82);
+  --glass-strong:  rgba(255, 255, 255, .96);
+
+  
+  --shadow-xs:     0 1px 3px rgba(18, 16, 14, .06);
+  --shadow-sm:     0 4px 14px rgba(18, 16, 14, .07);
+  --shadow-md:     0 8px 28px rgba(18, 16, 14, .09);
+  --shadow-lg:     0 20px 48px rgba(18, 16, 14, .12);
+  --shadow-ruby:   0 12px 36px rgba(20,54,43, .22);
+  --shadow-inset:  inset 0 1px 0 rgba(255,255,255,.18);
+
+  
+  --radius-sm:     8px;
+  --radius-md:     14px;
+  --radius-lg:     20px;
+  --radius-xl:     28px;
+  --radius-pill:   9999px;
+
+  
+  --ease:          cubic-bezier(.16, 1, .3, 1);
+  --ease-in:       cubic-bezier(.4, 0, 1, 1);
+  --ease-out:      cubic-bezier(0, 0, .2, 1);
+  --dur-fast:      .16s;
+  --dur-base:      .24s;
+  --dur-slow:      .38s;}
+*, *::before, *::after{box-sizing: border-box; margin: 0; padding: 0;}
+html{scroll-behavior: smooth; scroll-padding-top: 80px; -webkit-text-size-adjust: 100%;}
+body{font-family: "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-size: 14px;
+  line-height: 1.65;
+  color: var(--ink);
+  background: var(--bg);
+  min-height: 100dvh;
+  -webkit-font-smoothing: antialiased;}
+button, input, select, textarea{font: inherit;}
+button{cursor: pointer; border: none; background: none;}
+a{color: inherit; text-decoration: none;}
+img, svg{display: block; max-width: 100%;}
+button, input, select, textarea{max-width: 100%;}
+button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible{outline: 2.5px solid var(--amber);
+  outline-offset: 3px;
+  border-radius: 4px;}
+.wrap{width: min(1400px, calc(100% - 48px));
+  margin-inline: auto;}
+header{position: sticky;
+  top: 0;
+  z-index: 100;
+  background: rgba(251,249,245, .88);
+  border-bottom: 1px solid var(--border);
+  backdrop-filter: blur(18px) saturate(180%);
+  -webkit-backdrop-filter: blur(18px) saturate(180%);
+  box-shadow: 0 1px 0 rgba(20,54,43,.06), var(--shadow-xs);}
+.nav{display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  height: 68px;}
+.brand{display: inline-flex;
+  align-items: center;
+  gap: 14px;
+  min-width: 0;
+  flex-shrink: 0;}
+.brand-icon{display: grid;
+  place-items: center;
+  width: 46px;
+  height: 46px;
+  flex: 0 0 46px;
+  border-radius: var(--radius-md);
+  background: linear-gradient(145deg, var(--ruby-soft) 0%, var(--ruby-deep) 100%);
+  color: #fff;
+  font-size: 19px;
+  box-shadow: var(--shadow-ruby), var(--shadow-inset);}
+.brand h1{font-family: "Cormorant Garamond", Georgia, serif;
+  font-size: clamp(14px, 1.3vw, 18px);
+  font-weight: 700;
+  line-height: 1.25;
+  color: var(--ruby-deep);
+  letter-spacing: -.018em;
+  white-space: nowrap;}
+.brand small{display: block;
+  margin-top: 2px;
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--muted);
+  letter-spacing: .04em;
+  text-transform: uppercase;}
+.navlinks{display: flex;
+  align-items: center;
+  gap: 4px;
+  flex-wrap: wrap;
+  justify-content: flex-end;}
+.tab-btn{display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  min-height: 40px;
+  padding: 8px 14px;
+  border: 1px solid transparent;
+  border-radius: var(--radius-md);
+  background: transparent;
+  color: var(--ink-soft);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: .01em;
+  transition:
+    background var(--dur-fast) var(--ease-out),
+    color var(--dur-fast) var(--ease-out),
+    border-color var(--dur-fast) var(--ease-out),
+    transform var(--dur-fast) var(--ease-out);}
+.tab-btn:hover{background: rgba(20,54,43,.07);
+  color: var(--ruby);}
+.tab-btn.active{background: var(--ruby);
+  color: #fff;
+  border-color: var(--ruby-deep);
+  box-shadow: 0 4px 14px rgba(20,54,43,.28), var(--shadow-inset);}
+.btn-export-nav{display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  min-height: 40px;
+  padding: 8px 14px;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-md);
+  background: var(--glass);
+  color: var(--ruby);
+  font-size: 12px;
+  font-weight: 700;
+  backdrop-filter: blur(8px);
+  transition: all var(--dur-fast) var(--ease-out);}
+.btn-export-nav:hover{background: var(--surface);
+  border-color: var(--ruby);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-sm);}
+.hero-banner{position: relative;
+  overflow: hidden;
+  margin: 22px auto 24px;
+  width: min(1400px, calc(100% - 48px));
+  border-radius: var(--radius-xl);
+  color: #fff;
+  background:
+    radial-gradient(circle at 88% 8%, rgba(181,139,63, .32) 0%, transparent 38%),
+    radial-gradient(circle at 12% 90%, rgba(255,255,255,.06) 0%, transparent 28%),
+    linear-gradient(138deg, var(--ruby-deep) 0%, var(--ruby) 52%, #2F6B55 100%);
+  box-shadow: var(--shadow-ruby), var(--shadow-lg);
+  border: 1px solid rgba(255,255,255,.12);}
+.hero-banner::before{content: "";
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+  pointer-events: none;}
+.hero-banner::after{content: "🌳";
+  position: absolute;
+  right: 4%;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: clamp(100px, 15vw, 200px);
+  line-height: 1;
+  opacity: .07;
+  pointer-events: none;
+  filter: grayscale(1);}
+.hero-inner{position: relative;
+  z-index: 1;
+  padding: clamp(28px, 4.5vw, 54px) clamp(24px, 4vw, 52px);}
+.hero-eyebrow{display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 14px;
+  color: var(--amber-pale);
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: .18em;
+  text-transform: uppercase;}
+.hero-eyebrow::before{content: "";
+  display: block;
+  width: 20px;
+  height: 2px;
+  background: var(--amber-pale);
+  border-radius: 2px;}
+.hero-title{display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 32px;
+  flex-wrap: wrap;}
+.hero-title h2{margin: 0;
+  font-family: "Cormorant Garamond", Georgia, serif;
+  font-size: clamp(26px, 3.8vw, 46px);
+  font-weight: 700;
+  line-height: 1.15;
+  letter-spacing: -.03em;
+  max-width: 680px;}
+.hero-title h2 em{font-style: normal;
+  color: var(--amber-pale);}
+.hero-title p{margin: 12px 0 0;
+  color: rgba(255,255,255,.78);
+  font-size: 14px;
+  line-height: 1.75;
+  max-width: 600px;}
+.sync-badge{display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 10px;
+  border-radius: var(--radius-pill);
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: .05em;}
+
+.toolbar, .directory-control-bar{display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 18px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  background: var(--glass);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  box-shadow: var(--shadow-sm);}
+.toolbar{margin-bottom: 14px;}
+.directory-control-bar{margin-bottom: 18px; justify-content: space-between;}
+.search-box > i{position: absolute;
+  top: 50%;
+  left: 14px;
+  transform: translateY(-50%);
+  color: var(--ruby-soft);
+  font-size: 12px;
+  pointer-events: none;}
+.search-box input{width: 100%;
+  min-height: 42px;
+  padding: 10px 14px 10px 38px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: rgba(255,255,255,.9);
+  color: var(--ink);
+  font-size: 13px;
+  outline: none;
+  transition:
+    border-color var(--dur-fast) var(--ease-out),
+    box-shadow var(--dur-fast) var(--ease-out);}
+.search-box input:focus{border-color: var(--ruby);
+  box-shadow: 0 0 0 3px rgba(20,54,43,.1);}
+.toolbar{align-items: flex-start;}
+.search-box{position: relative;
+  flex: 1 1 240px;
+  min-width: 200px;}
+.filter-group{display: flex;
+  flex: 1 1 100%;
+  flex-wrap: wrap;
+  gap: 8px;}
+.filter-select{flex: 1 1 140px;
+  min-width: 0;
+  min-height: 42px;
+  padding: 9px 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: rgba(255,255,255,.85);
+  color: var(--ink);
+  font-size: 12px;
+  font-weight: 600;
+  outline: none;
+  cursor: pointer;
+  transition: border-color var(--dur-fast) var(--ease-out);
+  appearance: auto;}
+.filter-select:focus{border-color: var(--ruby);}
+#filterFamilyUnit, #sortDirectoryBy{border-color: rgba(20,54,43,.24);
+  color: var(--ruby-deep);
+  font-weight: 700;}
+#resetFilters{flex: 0 0 auto;
+  min-width: 80px;
+  background: var(--cream-dark);
+  color: var(--ruby-deep);
+  font-weight: 700;
+  transition: all var(--dur-fast) var(--ease-out);}
+#resetFilters:hover{background: var(--ruby);
+  color: #fff;
+  border-color: var(--ruby-deep);}
+.directory-summary-counter{display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 5px;
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 600;}
+.directory-summary-counter b{color: var(--ruby);
+  font-size: 18px;
+  font-weight: 800;
+  font-family: "Cormorant Garamond", Georgia, serif;}
+.active-filter-badges{display: inline-flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  margin-left: 4px;}
+.filter-badge-pill{font-size: 10px;
+  font-weight: 700;
+  background: rgba(21,128,61,.08);
+  color: #16a34a;
+  border: 1px solid rgba(21,128,61,.18);
+  padding: 2px 8px;
+  border-radius: var(--radius-pill);
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  cursor: pointer;
+  transition: background var(--dur-fast) var(--ease-out);}
+.filter-badge-pill:hover{background: rgba(21,128,61,.16);}
+.view-mode-toggle{display: flex;
+  gap: 3px;
+  padding: 4px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: rgba(20,54,43,.04);}
+.view-mode-btn{display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 36px;
+  padding: 6px 12px;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 700;
+  border: 1px solid transparent;
+  transition: all var(--dur-fast) var(--ease-out);}
+.view-mode-btn:hover{color: var(--ink);}
+.view-mode-btn.active{background: #fff;
+  color: var(--ruby);
+  border-color: rgba(20,54,43,.1);
+  box-shadow: var(--shadow-xs);}
+.directory-content-wrapper{min-width: 0;}
+.directory-content-wrapper img{object-fit: cover;}
+.cards-grid{display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 18px;
+  margin-bottom: 40px;}
+.modern-member-card{background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  position: relative;
+  box-shadow: var(--shadow-sm);
+  transition:
+    transform var(--dur-base) var(--ease),
+    box-shadow var(--dur-base) var(--ease),
+    border-color var(--dur-base) var(--ease);
+  display: flex;
+  flex-direction: column;}
+.modern-member-card:hover{transform: translateY(-5px);
+  box-shadow: var(--shadow-lg);
+  border-color: rgba(20,54,43,.22);}
+.modern-member-card.is-author{border-color: rgba(181,139,63,.3);
+  background: linear-gradient(180deg, #fffdf5 0%, var(--surface) 80px);}
+.card-top-stripe{height: 4px;
+  width: 100%;
+  transition: height var(--dur-fast) var(--ease-out);}
+.modern-member-card:hover .card-top-stripe{height: 5px;}
+.card-inner{padding: 16px 18px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  flex: 1;}
+.card-header-bar{display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;}
+.card-family-badge{font-size: 10px;
+  font-weight: 800;
+  padding: 3px 9px;
+  border-radius: var(--radius-pill);
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  letter-spacing: .01em;
+  max-width: 62%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;}
+.modal-backdrop{position: fixed;
+  inset: 0;
+  z-index: 200;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  overflow-y: auto;
+  padding: 20px;
+  background: rgba(18, 16, 14, .55);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);}
+.modal-backdrop[aria-hidden="true"]{display: none;}
+.modal-dialog{width: min(100%, 780px);
+  max-height: min(90dvh, 920px);
+  overflow: auto;
+  border: 1px solid rgba(255,255,255,.6);
+  border-radius: var(--radius-xl);
+  background: var(--glass-strong);
+  box-shadow: 0 32px 80px rgba(18,16,14,.28);
+  animation: modal-enter var(--dur-base) var(--ease) both;}
+.profile-modal-dialog{width: min(100%, 760px);}
+.edit-compact-dialog{width: min(100%, 800px);}
+.modal-head{position: sticky;
+  top: 0;
+  z-index: 2;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 14px;
+  padding: 18px 22px;
+  border-bottom: 1px solid var(--border);
+  background: rgba(251,249,245,.95);
+  backdrop-filter: blur(18px);}
+.profile-head-pill, .edit-head-tag{display: inline-flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  color: var(--ruby-deep);
+  font-size: 13px;
+  font-weight: 800;}
+.edit-head-left, .edit-head-right, .profile-head-actions{display: flex;
+  align-items: center;
+  gap: 12px;}
+.modal-close{display: grid;
+  place-items: center;
+  flex: 0 0 40px;
+  width: 40px;
+  height: 40px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: var(--surface);
+  color: var(--ruby);
+  transition: all var(--dur-fast) var(--ease-out);}
+.modal-close:hover{background: var(--ruby);
+  color: #fff;
+  border-color: var(--ruby-deep);
+  transform: rotate(5deg) scale(1.05);}
+.modal-body{padding: 24px;}
+.autosave-pill{display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 10px;
+  border: 1px solid rgba(21,128,61,.2);
+  border-radius: var(--radius-pill);
+  background: rgba(21,128,61,.07);
+  color: #16a34a;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: .03em;}
+.edit-identity-strip{display: grid;
+  grid-template-columns: 96px minmax(0,1fr);
+  gap: 20px;
+  align-items: center;
+  margin-bottom: 22px;
+  padding: 20px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  background: linear-gradient(120deg, var(--cream), rgba(255,255,255,.92));}
+.edit-avatar-container{display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;}
+.edit-avatar-bubble{position: relative;
+  display: grid;
+  place-items: center;
+  width: 80px;
+  height: 80px;
+  overflow: hidden;
+  border: 3px solid #fff;
+  border-radius: var(--radius-md);
+  background: var(--cream);
+  color: var(--ruby);
+  box-shadow: 0 0 0 1px var(--border), var(--shadow-sm);
+  font-size: 24px;
+  font-weight: 800;
+  cursor: pointer;
+  transition:
+    transform var(--dur-fast) var(--ease-out),
+    box-shadow var(--dur-fast) var(--ease-out);}
+.edit-avatar-bubble:hover{transform: scale(1.06);
+  box-shadow: 0 0 0 4px rgba(181,139,63,.4), var(--shadow-md);}
+.edit-avatar-bubble img{position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;}
+.avatar-camera-overlay{position: absolute;
+  inset: auto 0 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 26px;
+  color: #fff;
+  background: rgba(92,15,15,.82);
+  font-size: 10px;}
+.avatar-clear-link{background: transparent;
+  color: var(--ruby);
+  font-size: 10px;
+  font-weight: 700;}
+.edit-photo-lock-tag{color: var(--ruby);}
+.edit-names-group, .edit-grid-col{display: grid;
+  gap: 14px;
+  min-width: 0;}
+.edit-grid-two-col{display: grid;
+  grid-template-columns: repeat(2,minmax(0,1fr));
+  gap: 18px;}
+.compact-field{min-width: 0;}
+.compact-field label{display: block;
+  margin-bottom: 7px;
+  color: var(--ink-soft);
+  font-size: 9.5px;
+  font-weight: 800;
+  letter-spacing: .1em;
+  text-transform: uppercase;}
+.input-shell{position: relative;
+  display: flex;
+  align-items: center;}
+.field-icon{position: absolute;
+  left: 13px;
+  z-index: 1;
+  color: var(--ruby-soft);
+  font-size: 12px;
+  pointer-events: none;}
+.input-shell input, .input-shell textarea, .input-shell select, .compact-date-input{width: 100%;
+  min-width: 0;
+  min-height: 44px;
+  padding: 11px 13px 11px 38px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: var(--surface);
+  color: var(--ink);
+  font-size: 13px;
+  outline: none;
+  transition:
+    border-color var(--dur-fast) var(--ease-out),
+    box-shadow var(--dur-fast) var(--ease-out);}
+.input-shell input:focus, .input-shell textarea:focus, .input-shell select:focus, .compact-date-input:focus{border-color: var(--ruby);
+  box-shadow: 0 0 0 3px rgba(20,54,43,.09);}
+.input-shell textarea{min-height: 80px;
+  resize: vertical;}
+.textarea-shell{align-items: flex-start;}
+.textarea-shell .field-icon{top: 14px;}
+.field-label-row{display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;}
+.dob-pill-badge{color: var(--ruby);
+  font-size: 10px;
+  font-weight: 800;}
+.dob-age-combined{display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;}
+.compact-date-input{flex: 1 1 145px;
+  padding-left: 12px;}
+.inline-age-chip{display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 40px;
+  padding: 8px 12px;
+  border: 1px solid rgba(181,139,63,.35);
+  border-radius: var(--radius-md);
+  background: #F4ECD8;
+  color: #7a4f00;
+  font-size: 11px;
+  font-weight: 700;}
+.gender-segmented-bar{display: grid;
+  grid-template-columns: repeat(2,minmax(0,1fr));
+  gap: 7px;}
+.gender-pill-btn{min-height: 44px;
+  padding: 9px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: var(--surface);
+  color: var(--ink-soft);
+  font-size: 12px;
+  font-weight: 700;
+  transition: all var(--dur-fast) var(--ease-out);}
+.gender-pill-btn:hover{border-color: var(--ruby-soft);
+  color: var(--ruby);}
+.gender-pill-btn.active{border-color: var(--ruby);
+  background: rgba(20,54,43,.06);
+  color: var(--ruby-deep);
+  box-shadow: inset 0 0 0 1px rgba(20,54,43,.06);}
+.edit-compact-footer{display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 24px;
+  padding-top: 18px;
+  border-top: 1px solid var(--border);}
+.autosave-hint{color: var(--muted);
+  font-size: 11px;}
+.btn-compact-done{display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  min-height: 44px;
+  padding: 10px 22px;
+  border-radius: var(--radius-md);
+  background: var(--ruby);
+  color: #fff;
+  font-size: 13px;
+  font-weight: 800;
+  border: none;
+  box-shadow: 0 4px 14px rgba(20,54,43,.28), var(--shadow-inset);
+  transition:
+    background var(--dur-fast) var(--ease-out),
+    transform var(--dur-fast) var(--ease-out),
+    box-shadow var(--dur-fast) var(--ease-out);}
+.btn-compact-done:hover{background: var(--ruby-deep);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 22px rgba(20,54,43,.36);}
+.toast-container{position: fixed;
+  right: 20px;
+  bottom: 20px;
+  z-index: 300;
+  display: grid;
+  gap: 10px;
+  width: min(360px, calc(100% - 40px));
+  pointer-events: none;}
+footer{border-top: 1px solid var(--border);
+  background: rgba(251,249,245,.8);
+  margin-top: 20px;}
+@keyframes modal-enter{from { opacity: 0; transform: translateY(12px) scale(.985); }
+  to   { opacity: 1; transform: translateY(0)   scale(1);    }}
+
+@media (min-width: 1025px){.directory-content-wrapper[data-view-mode="grid"]{display: grid;
+    grid-template-columns: repeat(4,minmax(0,1fr));
+    gap: 16px;}}
+@media (min-width: 768px) and (max-width: 1024px){.wrap{width: calc(100% - 32px);}
+.hero-banner{width: calc(100% - 32px);}
+.directory-content-wrapper[data-view-mode="grid"]{display: grid;
+    grid-template-columns: repeat(3,minmax(0,1fr));
+    gap: 14px;}}
+@media (max-width: 767px){.wrap{width: calc(100% - 24px);}
+.hero-banner{width: calc(100% - 24px); margin-block: 14px 18px;}
+.nav{flex-direction: column; align-items: stretch; gap: 10px; height: auto; padding-block: 12px;}
+.navlinks{display: grid; grid-template-columns: repeat(2,minmax(0,1fr));}
+.tab-btn, .btn-export-nav{width: 100%; padding-inline: 8px; font-size: 11px;}
+.hero-title{flex-direction: column; align-items: flex-start; gap: 16px;}
+.hero-inner{padding: 24px 20px;}
+.hero-title h2{font-size: 26px;}
+.toolbar{padding: 12px;}
+.search-box{flex-basis: 100%; min-width: 0;}
+.filter-select{flex-basis: calc(50% - 6px); font-size: 11px;}
+.directory-control-bar{flex-direction: column; align-items: flex-start;}
+.view-mode-toggle{width: 100%;}
+.view-mode-btn{flex: 1; padding-inline: 6px; font-size: 11px;}
+.directory-content-wrapper[data-view-mode="grid"]{display: grid;
+    grid-template-columns: repeat(2,minmax(0,1fr));
+    gap: 10px;}
+.modal-backdrop{padding: 10px; align-items: flex-start;}
+.modal-dialog{max-height: calc(100dvh - 20px); border-radius: var(--radius-lg);}
+.modal-head{padding: 14px 16px;}
+.modal-body{padding: 16px;}
+.edit-identity-strip{grid-template-columns: 1fr; justify-items: center;}
+.edit-names-group{width: 100%;}
+.edit-grid-two-col{grid-template-columns: 1fr; gap: 14px;}
+.edit-head-left{flex-direction: column; align-items: flex-start; gap: 2px;}
+.autosave-pill{display: none;}}
+@media (prefers-reduced-motion: reduce){*, *::before, *::after{scroll-behavior: auto !important;
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .01ms !important;}}
+:root{--dt-primary: var(--primary, #14362B);
+  --dt-primary-dark: var(--primary-dark, #0E2A21);
+  --dt-primary-light: var(--primary-light, #2F6B55);
+  --dt-cream: var(--cream, #F3EFE6);
+  --dt-gold: var(--gold, #B58B3F);
+  --dt-green: var(--maternal, #4caf50);
+  --dt-line: rgba(20,54,43, .16);
+  --dt-surface: #FFFFFF;
+  --dt-ink: #2a1f21;
+  --dt-muted: #7a6a6c;}
+.hero-banner .hero-title h2{color: #fff;}
+.directory-content-wrapper, .directory-content-wrapper[data-view-mode]{display: block !important;
+  grid-template-columns: none !important;
+  min-width: 0;}
+.toolbar{display: grid;
+  gap: 12px;
+  padding: 16px 18px 18px;
+  background: var(--dt-surface);}
+.toolbar .search-box{flex: none; min-width: 0; width: 100%;}
+.toolbar .filter-group{display: grid;
+  grid-template-columns: minmax(220px, 1.6fr) repeat(5, minmax(130px, 1fr)) auto;
+  gap: 10px;
+  align-items: stretch;}
+.toolbar .filter-select{min-width: 0; width: 100%;}
+#filterFamilyUnit{font-weight: 800;
+  border-color: var(--dt-primary-light);
+  background-color: var(--dt-cream);
+  color: var(--dt-primary-dark);}
+#resetFilters{white-space: nowrap;}
+.directory-control-bar{background: var(--dt-surface);}
+.directory-summary-counter b{font-family: "Cormorant Garamond", Georgia, serif; font-size: 20px;}
+.active-filter-badges:empty{display: none;}
+.directory-content-wrapper .cards-grid{display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 310px), 1fr));
+  gap: 18px;
+  align-items: stretch;
+  margin-bottom: 40px;}
+.modern-member-card{background: #ffffff;
+  border: 1px solid rgba(20,54,43, .12);
+  border-radius: 18px;
+  overflow: hidden;
+  position: relative;
+  box-shadow: 0 4px 18px rgba(20,54,43, .05);
+  transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 0.22s cubic-bezier(0.16, 1, 0.3, 1),
+              border-color 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+  display: flex;
+  flex-direction: column;
+  height: 100%;}
+.modern-member-card:hover{transform: translateY(-4px);
+  border-color: rgba(181,139,63, .5);
+  box-shadow: 0 16px 36px rgba(20,54,43, .12);}
+.modern-member-card.is-author{border-color: rgba(181,139,63, .45);
+  box-shadow: 0 6px 24px rgba(181,139,63, .18);}
+.card-top-accent{height: 4px;
+  width: 100%;
+  background: linear-gradient(90deg, #14362B 0%, #B58B3F 100%);}
+.modern-member-card.is-author .card-top-accent{background: linear-gradient(90deg, #B58B3F 0%, #E5C378 100%);}
+.modern-member-card .card-inner{flex: 1;
+  padding: 18px 20px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 13px;}
+.card-member-header{display: flex;
+  align-items: center;
+  gap: 14px;}
+.card-member-header .card-avatar-container{width: 58px;
+  height: 58px;
+  min-width: 58px;
+  border-radius: 16px;
+  position: relative;
+  overflow: visible;
+  background: #f1ede3;
+  border: 2px solid rgba(20,54,43, .14);
+  box-shadow: 0 4px 10px rgba(0,0,0, .06);}
+.card-member-header .card-avatar-container.male{background: linear-gradient(135deg, #e8f0ec, #d2e3da);
+  border-color: rgba(20,54,43, .22);}
+.card-member-header .card-avatar-container.female{background: linear-gradient(135deg, #fbf2ec, #f5dfd2);
+  border-color: rgba(181,139,63, .25);}
+.card-member-header .avatar-img{width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 14px;
+  display: block;}
+.card-member-header .avatar-initials{width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: "Cormorant Garamond", Georgia, serif;
+  font-size: 20px;
+  font-weight: 700;
+  color: #14362B;}
+.card-author-badge{position: absolute;
+  bottom: -6px;
+  right: -6px;
+  background: #B58B3F;
+  color: #ffffff;
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: .04em;
+  padding: 2px 6px;
+  border-radius: 6px;
+  box-shadow: 0 2px 6px rgba(0,0,0, .18);
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;}
+.card-member-names{flex: 1;
+  min-width: 0;}
+.card-name-title{font-family: "Cormorant Garamond", Georgia, serif;
+  font-size: 19px;
+  font-weight: 700;
+  color: #14362B;
+  margin: 0;
+  line-height: 1.25;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;}
+.card-nickname-tag{display: inline-block;
+  margin-top: 3px;
+  font-size: 11px;
+  font-weight: 600;
+  color: #B58B3F;
+  letter-spacing: .02em;}
+.card-meta-list{display: flex;
+  flex-direction: column;
+  gap: 7px;
+  background: #F9F8F5;
+  border: 1px solid rgba(20,54,43, .08);
+  border-radius: 12px;
+  padding: 10px 12px;}
+.card-meta-row{display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  font-size: 12px;}
+.card-meta-label{font-size: 10px;
+  font-weight: 800;
+  letter-spacing: .06em;
+  color: #8C7853;
+  text-transform: uppercase;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;}
+.card-meta-label i{font-size: 11px;
+  color: #B58B3F;}
+.card-meta-val{color: #14362B;
+  font-weight: 600;
+  text-align: right;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;}
+.card-meta-val .val-sep{color: #B58B3F;
+  font-weight: 400;
+  margin: 0 2px;}
+.card-kinship-block{background: #FFFFFF;
+  border: 1px solid rgba(181,139,63, .3);
+  border-left: 3px solid #B58B3F;
+  border-radius: 10px;
+  padding: 8px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;}
+.kinship-block-label{font-size: 9.5px;
+  font-weight: 800;
+  letter-spacing: .06em;
+  color: #B58B3F;
+  text-transform: uppercase;
+  display: flex;
+  align-items: center;
+  gap: 5px;}
+.kinship-block-text{font-size: 12px;
+  font-weight: 600;
+  color: #14362B;
+  line-height: 1.35;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;}
+.modern-member-card .card-action-footer{border-top: 1px solid rgba(20,54,43, .08);
+  padding-top: 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: auto;}
+.modern-member-card .card-action-footer .btn-card-action{flex: 1 1 0;
+  min-width: 0;
+  height: 36px;
+  min-height: 36px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 6px 8px;
+  font-size: 12px;
+  font-weight: 700;
+  white-space: nowrap;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all var(--dur-fast) var(--ease-out);}
+.modern-member-card .card-action-footer .btn-copy-card{flex: 0 0 36px;
+  width: 36px;
+  min-width: 36px;
+  padding: 0;}
+.btn-card-action{background: #fff;
+  color: var(--dt-primary);
+  border: 1px solid var(--dt-line);
+  border-radius: 10px;
+  min-height: 34px;}
+.btn-card-action:hover{background: var(--dt-primary);
+  border-color: var(--dt-primary);
+  color: #fff;}
+.btn-card-action.btn-view-card{background: var(--dt-primary);
+  border-color: var(--dt-primary);
+  color: #fff;}
+.btn-card-action.btn-view-card:hover{background: var(--dt-primary-dark);}
+.btn-card-action.btn-tree-spotlight{background: var(--dt-cream);
+  border-color: rgba(181,139,63, .6);
+  color: #7A5A14;}
+.btn-card-action.btn-tree-spotlight:hover{background: var(--dt-gold);
+  border-color: var(--dt-gold);
+  color: #3b2a05;}
+.btn-card-action.btn-edit-card:hover, .btn-card-action.btn-copy-card:hover{background: var(--dt-primary);
+  color: #fff;}
+.selected-chips-container{display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  min-height: 28px;
+  padding: 4px 0;
+  align-items: center;}
+.relation-chip{display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 12px;
+  background: var(--dt-cream);
+  border: 1px solid rgba(20,54,43, .18);
+  border-radius: 99px;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--dt-primary-dark);
+  box-shadow: 0 1px 3px rgba(20,54,43, .06);}
+.relation-chip .btn-remove-chip{display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(20,54,43, .12);
+  color: #8b2525;
+  font-size: 13px;
+  line-height: 1;
+  cursor: pointer;
+  padding: 0;
+  transition: all 0.15s ease;}
+.relation-chip .btn-remove-chip:hover{background: #a32929;
+  color: #fff;}
+.kinship-avatar img, .chip-avatar img{width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: inherit;
+  display: block;}
+.fg-toolbar{display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 0 2px 14px;
+  color: var(--dt-muted);
+  font-size: 12px;
+  font-weight: 600;}
+.fg-toolbar .fg-toggle-all{min-height: 36px;
+  padding: 7px 14px;
+  border: 1px solid var(--dt-line);
+  border-radius: 10px;
+  background: #fff;
+  color: var(--dt-primary);
+  font-size: 12px;
+  font-weight: 700;}
+.fg-toolbar .fg-toggle-all:hover{background: var(--dt-primary); color: #fff;}
+.directory-content-wrapper .family-group-section{margin-bottom: 18px;
+  background: var(--dt-surface);
+  border: 1px solid var(--dt-line);
+  border-radius: 20px;
+  box-shadow: 0 6px 22px rgba(20,54,43, .06);
+  overflow: hidden;}
+.directory-content-wrapper .family-group-header{position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 16px 20px 16px 26px;
+  border-bottom: 1px solid var(--dt-line);
+  background: linear-gradient(90deg, var(--dt-cream), var(--dt-surface));}
+.directory-content-wrapper .family-group-header:hover{background: var(--dt-cream);}
+.fg-accent{position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 7px;}
+.fg-title{display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px 14px;
+  min-width: 0;}
+.fg-title .card-family-badge{max-width: none;
+  font-size: 14px;
+  padding: 6px 14px;
+  white-space: normal;}
+.fg-heads{color: var(--dt-muted);
+  font-size: 12px;
+  font-weight: 600;}
+.fg-heads b{color: var(--dt-primary-dark);}
+.fg-meta{display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: none;}
+.fg-chip{display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 11px;
+  border: 1px solid var(--dt-line);
+  border-radius: 99px;
+  background: #fff;
+  color: var(--dt-primary-dark);
+  font-size: 12px;
+  font-weight: 800;
+  white-space: nowrap;}
+.fg-chip.gold{background: rgba(181,139,63, .2);
+  border-color: rgba(181,139,63, .5);
+  color: #6f510f;}
+.fg-chevron{width: 30px;
+  height: 30px;
+  display: grid;
+  place-items: center;
+  border-radius: 9px;
+  background: #fff;
+  border: 1px solid var(--dt-line);
+  color: var(--dt-primary);
+  font-size: 12px;
+  transition: transform .2s ease;}
+.directory-content-wrapper .family-group-cards{display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 310px), 1fr));
+  gap: 16px;
+  padding: 18px 20px 20px;
+  background: rgba(251,249,245, .35);
+  align-items: stretch;}
+.family-group-section.is-collapsed .family-group-cards{display: none;}
+.family-group-section.is-collapsed .fg-chevron{transform: rotate(-90deg);}
+.family-group-section.is-collapsed .family-group-header{border-bottom-color: transparent;}
+.directory-table-wrapper{position: relative;
+  max-height: min(78vh, 900px);
+  overflow: auto;
+  margin-bottom: 40px;
+  background: var(--dt-surface);
+  border: 1px solid var(--dt-line);
+  border-radius: 20px;
+  box-shadow: 0 6px 22px rgba(20,54,43, .06);}
+.directory-table{width: 100%;
+  min-width: 680px;
+  border-collapse: separate;
+  border-spacing: 0;
+  font-size: 13px;}
+.directory-table thead th{position: sticky;
+  top: 0;
+  z-index: 3;
+  padding: 13px 14px;
+  background: var(--dt-cream);
+  color: var(--dt-primary-dark);
+  border-bottom: 2px solid rgba(181,139,63, .6);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: .07em;
+  text-transform: uppercase;
+  text-align: left;
+  white-space: nowrap;}
+.directory-table td{padding: 12px 14px;
+  border-bottom: 1px solid var(--dt-line);
+  background: var(--dt-surface);
+  color: var(--dt-ink);
+  vertical-align: middle;}
+.directory-table tbody tr:nth-child(even) td{background: #F7F4EC;}
+.directory-table tbody tr{cursor: pointer;}
+.directory-table tbody tr:hover td{background: #E8EFEA;}
+.directory-table tbody tr.is-author td{background: rgba(181,139,63, .2);}
+.directory-table .col-member{position: sticky;
+  left: 0;
+  z-index: 2;
+  min-width: 220px;
+  box-shadow: 6px 0 8px -6px rgba(20,54,43, .18);}
+.directory-table thead .col-member{z-index: 4;}
+.directory-table .col-actions{position: sticky;
+  right: 0;
+  z-index: 2;
+  min-width: 160px;
+  text-align: right;
+  box-shadow: -6px 0 8px -6px rgba(20,54,43, .18);}
+.directory-table thead .col-actions{z-index: 4; text-align: right;}
+.dt-member{display: flex; align-items: center; gap: 12px;}
+.dt-member .card-avatar-container{width: 42px; height: 42px; flex: none;}
+.dt-member .avatar-initials{font-size: 14px;}
+.dt-name{display: block;
+  font-family: "Cormorant Garamond", Georgia, serif;
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 1.25;
+  color: var(--dt-primary-dark);}
+.dt-nick{margin-top: 4px; display: inline-block;}
+.dt-me{display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  margin-left: 6px;
+  padding: 1px 7px;
+  border-radius: 99px;
+  background: var(--dt-gold);
+  color: #3b2a05;
+  font-family: "Plus Jakarta Sans", sans-serif;
+  font-size: 9px;
+  font-weight: 900;
+  letter-spacing: .06em;
+  vertical-align: middle;}
+.dt-tags{display: flex; flex-wrap: wrap; gap: 5px;}
+.dt-tags .meta-tag{font-size: 11px;}
+.dt-two-line{display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  line-height: 1.45;}
+.dt-muted{color: var(--dt-muted);}
+.dt-age b{color: var(--dt-primary-dark); font-size: 15px;}
+.dt-age small{display: block; margin-top: 2px; color: var(--dt-muted); font-weight: 600;}
+.dt-geneal{color: var(--dt-primary-dark); font-weight: 600; font-size: 12px;}
+.dt-geneal i{color: var(--dt-gold); margin-right: 6px;}
+.dt-bio{color: var(--dt-muted); font-style: italic; font-size: 12px;}
+.dt-actions{display: inline-flex; gap: 6px;}
+.dt-actions .btn-card-action{width: 34px; padding: 0;}
+.directory-table th:nth-child(1), .directory-table td:nth-child(1){min-width: 200px;}
+.directory-table th:nth-child(2), .directory-table td:nth-child(2){min-width: 170px;}
+.directory-table th:nth-child(3), .directory-table td:nth-child(3){min-width: 110px;}
+.directory-table th:nth-child(4), .directory-table td:nth-child(4){min-width: 120px;}
+.directory-table th:nth-child(5), .directory-table td:nth-child(5){min-width: 160px;}
+.directory-table .card-family-badge{max-width: 240px;
+  white-space: normal;
+  line-height: 1.3;}
+.toolbar .view-mode-toggle{display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  flex: 1;
+  width: 100%;}
+.toolbar .view-mode-toggle .view-mode-btn{min-width: 0;
+  justify-content: center;
+  white-space: nowrap;}
+@media (max-width: 1180px){.toolbar .filter-group{grid-template-columns: repeat(3, minmax(0, 1fr));}
+#filterFamilyUnit{grid-column: 1 / -1;}
+#resetFilters{grid-column: auto;}}
+@media (max-width: 767px){.toolbar{padding: 12px;}
+.toolbar .filter-group{grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px;}
+.toolbar .filter-select{min-width: 0;
+    width: 100%;
+    min-height: 42px;
+    padding: 8px 6px 8px 10px;
+    font-size: 11px;
+    text-overflow: ellipsis;}
+#resetFilters{grid-column: auto; min-width: 0;}
+.toolbar .view-mode-btn{padding: 7px 4px; font-size: 11px; gap: 6px;}
+.directory-content-wrapper .family-group-header{flex-wrap: wrap;
+    padding: 14px 16px 14px 22px;}
+.fg-meta{width: 100%; justify-content: space-between;}
+.directory-content-wrapper .family-group-cards{padding: 12px; gap: 12px;}
+.directory-table-wrapper{max-height: 70vh; border-radius: 16px;}
+.directory-table .col-member{min-width: 190px;}}
+@media (prefers-reduced-motion: reduce){.fg-chevron, .modern-member-card{transition: none !important;}}
+.card-avatar-container, .profile-avatar-wrap, .kinship-avatar, .chip-avatar, .edit-avatar-bubble{border-radius: 14px !important;}
+.dt-member .card-avatar-container, .kinship-avatar, .chip-avatar{border-radius: 10px !important;}
+.avatar-img, .profile-avatar-img, .edit-avatar-bubble img{border-radius: inherit !important;
+  object-fit: cover;}
+.card-avatar-container .avatar-img{width: 100%; height: 100%;}
+.author-crown-pill{right: -6px; bottom: -6px;}
+.toolbar, .directory-control-bar{grid-template-columns: minmax(0, 1fr);
+  width: 100%;
+  max-width: 100%;}
+.toolbar > *, .toolbar .filter-group{min-width: 0; max-width: 100%;}
+main.wrap{max-width: 100%;}
+.nav{flex-wrap: wrap;}
+.brand{flex: 1 1 260px;}
+.navlinks{flex: 1 1 auto;}
+.tab-btn, .btn-export-nav{white-space: nowrap;}
+@media (max-width: 1100px){.nav{flex-direction: column; flex-wrap: nowrap; align-items: stretch; gap: 10px;}
+.brand{flex: 0 0 auto;}
+.navlinks{flex: 0 0 auto;
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+    justify-content: stretch;
+    gap: 8px;}
+.tab-btn, .btn-export-nav{width: 100%;}}
+
+#editPersonModal{align-items: center; padding: 14px;}
+#editPersonModal .modal-dialog.edit-compact-dialog{display: flex;
+  flex-direction: column;
+  width: min(940px, 100%);
+  max-height: min(96vh, 880px);
+  max-height: min(96dvh, 880px);
+  overflow: hidden;}
+#editPersonModal .edit-compact-head{flex: none; padding: 12px 20px;}
+#editPersonModal .edit-head-left{flex-direction: row; align-items: center; flex-wrap: wrap; gap: 6px 12px;}
+#editPersonModal .edit-compact-body{flex: 1 1 auto;
+  min-height: 0;
+  padding: 16px 20px 0 !important;
+  overflow-y: auto !important;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;}
+#editPersonModal .input-shell{display: block;
+  position: relative;
+  padding: 0 !important;
+  margin: 0 !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: none !important;
+  box-shadow: none !important;
+  outline: 0 !important;}
+#editPersonModal .input-shell::before, #editPersonModal .input-shell::after{content: none !important;}
+#editPersonModal .input-shell input, #editPersonModal .input-shell select, #editPersonModal .input-shell textarea, #editPersonModal .compact-date-input{display: block;
+  width: 100%;
+  min-width: 0;
+  height: 40px;
+  min-height: 40px;
+  margin: 0;
+  padding: 0 12px 0 36px;
+  border: 1px solid var(--dt-line, rgba(20,54,43, .22));
+  border-radius: 10px;
+  background-color: #fff;
+  color: var(--dt-ink, #1a1a1a);
+  font-size: 13.5px;
+  line-height: 1.3;
+  outline: 0;
+  box-shadow: none;
+  -webkit-appearance: none;
+  appearance: none;}
+#editPersonModal .input-shell select{padding-right: 34px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' fill='none' stroke='%238b3a3a' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  text-overflow: ellipsis;}
+#editPersonModal .input-shell textarea{height: 64px; min-height: 64px; padding-top: 10px; padding-bottom: 10px; resize: none;}
+#editPersonModal .input-shell input:focus, #editPersonModal .input-shell select:focus, #editPersonModal .input-shell textarea:focus, #editPersonModal .compact-date-input:focus{border-color: var(--dt-primary, #14362B);
+  box-shadow: 0 0 0 3px rgba(20,54,43, .12);}
+#editPersonModal .field-icon{position: absolute;
+  left: 12px;
+  top: 20px;
+  transform: translateY(-50%);
+  z-index: 1;
+  pointer-events: none;
+  font-size: 12px;}
+#editPersonModal .textarea-shell .field-icon{top: 21px;}
+#editPersonModal .compact-date-input{flex: 1 1 130px; padding-left: 12px;}
+#editPersonModal .compact-field{margin: 0 !important; min-width: 0;}
+#editPersonModal .compact-field > label, #editPersonModal .field-label-row label{display: block;
+  margin: 0 0 5px;
+  font-size: 10px;
+  letter-spacing: .08em;}
+#editPersonModal .field-label-row{margin-bottom: 0; flex-wrap: nowrap;}
+#editPersonModal .field-label-row label{margin-bottom: 5px;}
+#editPersonModal .dob-age-combined{display: flex; flex-wrap: nowrap; align-items: center; gap: 8px;}
+#editPersonModal .inline-age-chip{flex: 0 0 auto; height: 40px; min-height: 40px; padding: 0 11px; border-radius: 10px; white-space: nowrap;}
+#editPersonModal .gender-segmented-bar{display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 6px;
+  padding: 0;
+  border: 0;
+  background: none;}
+#editPersonModal .gender-pill-btn{height: 40px; min-height: 40px; padding: 0 8px; border-radius: 10px;}
+#editPersonModal .edit-avatar-container{gap: 5px;}
+#editPersonModal .edit-avatar-bubble{width: 84px;
+  height: 84px;
+  border: 2px solid rgba(20,54,43, .28) !important;
+  box-shadow: none !important;}
+#editPersonModal .edit-avatar-bubble:hover{transform: none; box-shadow: 0 0 0 3px rgba(181,139,63, .4) !important;}
+#editPersonForm{display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 12px 14px;
+  align-items: start;}
+#editPersonForm .edit-identity-strip, #editPersonForm .edit-names-group, #editPersonForm .edit-grid-two-col, #editPersonForm .edit-grid-col{display: contents !important;}
+#editPersonForm > *{min-width: 0;}
+#editPersonForm #photoUploadSection{grid-column: 1; grid-row: 1 / span 2; justify-self: center; align-self: center;}
+#editPersonForm #photoNotice{grid-column: 1; grid-row: 1; justify-self: end; align-self: start;}
+#editPersonForm .compact-field:has(#editName){grid-column: 2 / span 3; grid-row: 1;}
+#editPersonForm .compact-field:has(#editGender){grid-column: 5 / span 2; grid-row: 1;}
+#editPersonForm .compact-field:has(#editDobPicker){grid-column: 2 / span 3; grid-row: 2;}
+#editPersonForm .compact-field:has(#editFamilyLabel){grid-column: 5 / span 2; grid-row: 2;}
+#editPersonForm .compact-field:has(#editGeneration), #editPersonForm .compact-field:has(#editBranch), #editPersonForm .compact-field:has(#editFamilyUnit), #editPersonForm .compact-field:has(#editCity), #editPersonForm .compact-field:has(#editFatherId), #editPersonForm .compact-field:has(#editMotherId){grid-column: span 2; grid-row: auto;}
+#editPersonForm .compact-field:has(#editSpouses), #editPersonForm .compact-field:has(#editChildren){grid-column: span 3; grid-row: auto;}
+#editPersonForm .compact-field:has(#editBio){grid-column: span 4; grid-row: auto;}
+#editPersonForm .compact-field:has(#editIsInLaw){grid-column: span 2; grid-row: auto; align-self: end;}
+#editPersonForm .compact-field:has(#editIsInLaw) label{display: flex;
+  align-items: center;
+  gap: 10px;
+  height: 40px;
+  margin: 0;
+  padding: 0 12px;
+  border: 1px solid var(--dt-line, rgba(20,54,43, .22));
+  border-radius: 10px;
+  background: #fff;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0;
+  line-height: 1;
+  white-space: nowrap;
+  cursor: pointer;}
+#editPersonForm #editIsInLaw{width: 17px; height: 17px; margin: 0; accent-color: var(--dt-primary, #14362B);}
+#editPersonForm .edit-compact-footer{grid-column: 1 / -1;
+  position: sticky;
+  bottom: 0;
+  z-index: 5;
+  margin: 2px -20px 0;
+  padding: 11px 20px calc(11px + env(safe-area-inset-bottom, 0px));
+  gap: 10px 14px;
+  background: rgba(255, 253, 249, .97);
+  border-top: 1px solid var(--dt-line, rgba(20,54,43, .22));}
+#editPersonForm .edit-compact-footer .btn-compact-done{min-height: 40px; padding: 8px 18px;}
+#editPersonForm .compact-field:has(#editGeneration){order: 1;}
+#editPersonForm .compact-field:has(#editBranch){order: 2;}
+#editPersonForm .compact-field:has(#editFamilyUnit){order: 3;}
+#editPersonForm .compact-field:has(#editCity){order: 4;}
+#editPersonForm .compact-field:has(#editFatherId){order: 5;}
+#editPersonForm .compact-field:has(#editMotherId){order: 6;}
+#editPersonForm .compact-field:has(#editSpouses){order: 7;}
+#editPersonForm .compact-field:has(#editChildren){order: 8;}
+#editPersonForm .compact-field:has(#editBio){order: 9;}
+#editPersonForm .compact-field:has(#editIsInLaw){order: 10;}
+#editPersonForm .edit-compact-footer{order: 99;}
+@media (max-width: 899px){#editPersonForm{grid-template-columns: repeat(4, minmax(0, 1fr));}
+#editPersonForm .compact-field:has(#editName){grid-column: 2 / span 3; grid-row: 1;}
+#editPersonForm .compact-field:has(#editDobPicker){grid-column: 2 / span 3; grid-row: 2;}
+#editPersonForm .compact-field:has(#editGender){grid-column: span 2; grid-row: auto;}
+#editPersonForm .compact-field:has(#editFamilyLabel){grid-column: span 2; grid-row: auto;}
+#editPersonForm .compact-field:has(#editSpouses), #editPersonForm .compact-field:has(#editChildren){grid-column: span 2;}
+#editPersonForm .compact-field:has(#editBio), #editPersonForm .compact-field:has(#editIsInLaw){grid-column: 1 / -1;}}
+@media (max-width: 599px){#editPersonModal{padding: 0; align-items: flex-end;}
+#editPersonModal .modal-dialog.edit-compact-dialog{width: 100%;
+    max-height: 96vh;
+    max-height: 96dvh;
+    border-radius: 20px 20px 0 0;}
+#editPersonModal .edit-compact-head{padding: 10px 14px;}
+#editPersonModal .edit-compact-body{padding: 12px 14px 0 !important;}
+#editPersonForm{grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 11px 10px;}
+#editPersonForm #photoUploadSection{grid-column: 1 / -1; grid-row: auto; flex-direction: row; gap: 14px;}
+#editPersonForm #photoNotice{grid-row: auto;}
+#editPersonForm .compact-field:has(#editName), #editPersonForm .compact-field:has(#editDobPicker), #editPersonForm .compact-field:has(#editGender), #editPersonForm .compact-field:has(#editFamilyLabel), #editPersonForm .compact-field:has(#editSpouses), #editPersonForm .compact-field:has(#editChildren), #editPersonForm .compact-field:has(#editBio), #editPersonForm .compact-field:has(#editIsInLaw), #editPersonForm .compact-field:has(#editFatherId), #editPersonForm .compact-field:has(#editMotherId){grid-column: 1 / -1; grid-row: auto;}
+#editPersonForm .compact-field:has(#editGeneration), #editPersonForm .compact-field:has(#editBranch), #editPersonForm .compact-field:has(#editFamilyUnit), #editPersonForm .compact-field:has(#editCity){grid-column: span 1; grid-row: auto;}
+#editPersonForm .edit-compact-footer{margin-inline: -14px; padding-inline: 14px;}
+#editPersonForm .autosave-hint{flex: 1 1 100%;}
+#editPersonForm .edit-compact-footer > div{width: 100%;}
+#editPersonForm .edit-compact-footer .btn-compact-done{flex: 1 1 0;}}
+@media (pointer: coarse){#editPersonModal .input-shell input, #editPersonModal .input-shell select, #editPersonModal .input-shell textarea, #editPersonModal .compact-date-input{font-size: 16px;}}
+@media (min-width: 700px){#editPersonForm{grid-template-columns: repeat(12, minmax(0, 1fr));}
+#editPersonForm #photoUploadSection{grid-column: 1 / span 2; grid-row: 1; align-self: center; justify-self: center;}
+#editPersonForm #photoNotice{grid-column: 1 / span 2; grid-row: 1;}
+#editPersonForm .compact-field:has(#editName){grid-column: 3 / span 10; grid-row: 1; align-self: center;}
+#editPersonForm .compact-field:has(#editDobPicker){grid-column: 1 / span 4; grid-row: 2;}
+#editPersonForm .compact-field:has(#editGender){grid-column: 5 / span 4; grid-row: 2;}
+#editPersonForm .compact-field:has(#editFamilyLabel){grid-column: 9 / span 4; grid-row: 2;}
+#editPersonForm .compact-field:has(#editGeneration), #editPersonForm .compact-field:has(#editBranch), #editPersonForm .compact-field:has(#editCity), #editPersonForm .compact-field:has(#editFamilyUnit), #editPersonForm .compact-field:has(#editFatherId), #editPersonForm .compact-field:has(#editMotherId){grid-column: span 4; grid-row: auto;}
+#editPersonForm .compact-field:has(#editBio), #editPersonForm .compact-field:has(#editSpouses), #editPersonForm .compact-field:has(#editChildren), #editPersonForm .compact-field:has(#editIsInLaw){grid-column: span 6; grid-row: auto;}
+#editPersonForm .compact-field:has(#editGeneration){order: 1;}
+#editPersonForm .compact-field:has(#editBranch){order: 2;}
+#editPersonForm .compact-field:has(#editCity){order: 3;}
+#editPersonForm .compact-field:has(#editFamilyUnit){order: 4;}
+#editPersonForm .compact-field:has(#editFatherId){order: 5;}
+#editPersonForm .compact-field:has(#editMotherId){order: 6;}
+#editPersonForm .compact-field:has(#editBio){order: 7;}
+#editPersonForm .compact-field:has(#editSpouses){order: 8;}
+#editPersonForm .compact-field:has(#editChildren){order: 9;}
+#editPersonForm .compact-field:has(#editIsInLaw){order: 10;}}
+@media (max-width: 420px){.toolbar .filter-group{grid-template-columns: minmax(0, 1fr);}
+.fg-toolbar{align-items: stretch;}}
+.tab-btn{text-decoration:none}
+:root{--primary: #14362B;
+      --primary-dark: #0E2A21;
+      --primary-light: #2F6B55;
+      --cream: #F3EFE6;
+      --gold: #B58B3F;
+      --background: #f8fafc;
+      --text: #1a1a1a;
+      --text-muted: #64748b;
+      --muted: #a0aec0;
+      --maternal: #4caf50;
+      --border: rgba(20,54,43, .18);
+      --glass: rgba(255, 255, 255, .8);
+      --glass-strong: rgba(255, 255, 255, .92);
+      --shadow: 0 8px 32px rgba(0, 0, 0, .05);
+      --shadow-hover: 0 16px 40px rgba(20,54,43, .14);
+      --radius: 18px;
+      --transition: .25s ease;}
+*, *::before, *::after{box-sizing: border-box;}
+html{scroll-behavior: smooth;
+      scroll-padding-top: 110px;}
+body{margin: 0;
+      color: var(--text);
+      background:
+        radial-gradient(ellipse at 0% 0%, rgba(181,139,63,.13), transparent 36rem),
+        radial-gradient(ellipse at 100% 15%, rgba(20,54,43,.09), transparent 38rem),
+        var(--background);
+      font-family: "Plus Jakarta Sans", sans-serif;
+      line-height: 1.6;
+      min-height: 100vh;}
+button, input, select, textarea{font: inherit;}
+button{cursor: pointer;}
+button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible{outline: 3px solid rgba(181,139,63,.75);
+      outline-offset: 3px;}
+a{color: inherit;}
+button, input, select, textarea{max-width: 100%;}
+.wrap{width: min(1440px, calc(100% - 48px));
+      margin-inline: auto;}
+header{position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(251,249,245,.76);
+      border-bottom: 1px solid rgba(20,54,43,.14);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      box-shadow: 0 4px 24px rgba(26,26,26,.035);}
+.nav{display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+      padding-block: 14px;}
+.brand{display: inline-flex;
+      align-items: center;
+      gap: 13px;
+      text-decoration: none;
+      min-width: 0;}
+.brand-icon{display: grid;
+      place-items: center;
+      flex: 0 0 48px;
+      width: 48px;
+      height: 48px;
+      border-radius: 16px;
+      color: white;
+      background: linear-gradient(145deg, var(--primary-light), var(--primary-dark));
+      box-shadow: 0 6px 18px rgba(20,54,43,.23);
+      font-size: 20px;}
+.brand h1{margin: 0;
+      color: var(--primary-dark);
+      font-family: "Cormorant Garamond", Georgia, serif;
+      font-size: clamp(16px, 1.5vw, 21px);
+      line-height: 1.3;}
+.brand small{display: block;
+      margin-top: 3px;
+      color: var(--text-muted);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: .035em;}
+.navlinks{display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      flex-wrap: wrap;
+      gap: 7px;}
+.tab-btn, .btn-export-nav{min-height: 44px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 9px;
+      padding: 10px 15px;
+      border: 1px solid transparent;
+      border-radius: 12px;
+      background: transparent;
+      color: #62575a;
+      font-size: 12px;
+      font-weight: 700;
+      transition: background var(--transition), color var(--transition),
+        border-color var(--transition), transform var(--transition);}
+.tab-btn:hover{background: rgba(20,54,43,.07);
+      color: var(--primary);}
+.tab-btn.active{color: white;
+      background: var(--primary);
+      box-shadow: 0 5px 15px rgba(20,54,43,.2);}
+.btn-export-nav{border-color: var(--border);
+      color: var(--primary);
+      background: var(--glass);}
+.btn-export-nav:hover{border-color: var(--primary);
+      background: white;
+      transform: translateY(-1px);}
+.hero-banner{position: relative;
+      overflow: hidden;
+      margin: 26px auto 28px;
+      width: min(1440px, calc(100% - 48px));
+      border: 1px solid rgba(255,255,255,.22);
+      border-radius: 24px;
+      color: white;
+      background:
+        radial-gradient(circle at 90% 10%, rgba(181,139,63,.24), transparent 22rem),
+        linear-gradient(120deg, #0E2A21 0%, #14362B 58%, #2F6B55 100%);
+      box-shadow: 0 16px 40px rgba(20,54,43,.16);}
+.hero-banner::after{content: "✳";
+      position: absolute;
+      right: 5%;
+      top: 50%;
+      transform: translateY(-50%);
+      color: rgba(251,249,245,.12);
+      font-size: clamp(110px, 17vw, 230px);
+      line-height: 1;
+      pointer-events: none;}
+.hero-inner{position: relative;
+      z-index: 1;
+      padding: clamp(25px, 4vw, 48px);}
+.hero-eyebrow{display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 13px;
+      color: #f0d69f;
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: .17em;
+      text-transform: uppercase;}
+.hero-title{display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      gap: 30px;}
+.hero-title h2{max-width: 740px;
+      margin: 0;
+      font-family: "Cormorant Garamond", Georgia, serif;
+      font-size: clamp(27px, 4vw, 45px);
+      font-weight: 600;
+      line-height: 1.18;
+      letter-spacing: -.025em;}
+.hero-title p{max-width: 680px;
+      margin: 13px 0 0;
+      color: rgba(255,255,255,.82);
+      font-size: 14px;
+      line-height: 1.8;}
+main.wrap{padding-bottom: 36px;}
+.toolbar, .directory-control-bar{display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 12px;
+      padding: 16px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--glass);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);}
+.filter-select, .view-mode-btn{min-height: 42px;
+      border: 1px solid var(--border);
+      border-radius: 11px;
+      background: rgba(255,255,255,.86);
+      color: #51474a;
+      font-size: 11px;
+      font-weight: 700;
+      transition: all var(--transition);}
+.view-mode-btn{display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 9px 12px;}
+.filter-select:hover, .view-mode-btn:hover{border-color: var(--primary);
+      color: var(--primary);
+      background: white;}
+.search-box input{width: 100%;
+      min-height: 44px;
+      padding: 10px 14px 10px 39px;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      outline: none;
+      background: rgba(255,255,255,.9);
+      color: var(--text);
+      font-size: 12px;
+      transition: border-color var(--transition), box-shadow var(--transition);}
+.search-box input:focus{border-color: var(--primary);
+      box-shadow: 0 0 0 4px rgba(20,54,43,.08);}
+.toolbar{align-items: flex-start;
+      margin-bottom: 15px;}
+.search-box{position: relative;
+      flex: 1 1 260px;
+      min-width: 220px;}
+.search-box > i{position: absolute;
+      top: 50%;
+      left: 14px;
+      transform: translateY(-50%);
+      color: var(--primary);
+      font-size: 13px;
+      pointer-events: none;}
+.filter-group{display: flex;
+      flex: 1 1 100%;
+      flex-wrap: wrap;
+      gap: 9px;}
+.filter-select{flex: 1 1 145px;
+      min-width: 0;
+      padding: 9px 12px;}
+#filterFamilyUnit, #sortDirectoryBy{border-color: rgba(20,54,43,.3);
+      color: var(--primary-dark);}
+#resetFilters{flex: 0 0 auto;
+      min-width: 78px;
+      background: var(--cream);
+      color: var(--primary-dark);}
+.directory-control-bar{justify-content: space-between;
+      margin-bottom: 18px;}
+.directory-summary-counter{display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 5px;
+      color: var(--text-muted);
+      font-size: 12px;}
+.directory-summary-counter b{color: var(--primary);
+      font-size: 16px;}
+.directory-summary-counter > span:not(.active-filter-badges){font-weight: 700;}
+.active-filter-badges{display: inline-flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-left: 6px;}
+.view-mode-toggle{display: flex;
+      flex-wrap: wrap;
+      gap: 5px;
+      padding: 4px;
+      border: 1px solid var(--border);
+      border-radius: 13px;
+      background: rgba(20,54,43,.045);}
+.view-mode-btn{min-height: 38px;
+      padding: 7px 12px;
+      border-color: transparent;
+      background: transparent;}
+.view-mode-btn.active{border-color: rgba(20,54,43,.12);
+      background: white;
+      color: var(--primary);
+      box-shadow: 0 2px 8px rgba(0,0,0,.05);}
+.directory-content-wrapper{min-width: 0;}
+.directory-content-wrapper img{object-fit: cover;}
+.modal-backdrop{position: fixed;
+      inset: 0;
+      z-index: 200;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      overflow-y: auto;
+      padding: 20px;
+      background: rgba(38,20,22,.5);
+      backdrop-filter: blur(9px);
+      -webkit-backdrop-filter: blur(9px);}
+.modal-backdrop[aria-hidden="true"]{display: none;}
+.modal-dialog{width: min(100%, 760px);
+      max-height: min(90dvh, 900px);
+      overflow: auto;
+      border: 1px solid rgba(255,255,255,.65);
+      border-radius: 22px;
+      background: rgba(255,255,255,.96);
+      box-shadow: 0 24px 80px rgba(30,10,12,.22);
+      animation: modal-enter .22s ease both;}
+.profile-modal-dialog{width: min(100%, 760px);}
+.edit-compact-dialog{width: min(100%, 780px);}
+.modal-head{position: sticky;
+      top: 0;
+      z-index: 2;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 14px;
+      padding: 17px 21px;
+      border-bottom: 1px solid var(--border);
+      background: rgba(251,249,245,.95);
+      backdrop-filter: blur(18px);}
+.profile-head-pill, .edit-head-tag{display: inline-flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 9px;
+      color: var(--primary-dark);
+      font-size: 13px;
+      font-weight: 800;}
+.edit-head-left, .edit-head-right, .profile-head-actions{display: flex;
+      align-items: center;
+      gap: 12px;}
+.modal-close{display: grid;
+      place-items: center;
+      flex: 0 0 42px;
+      width: 42px;
+      height: 42px;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      background: white;
+      color: var(--primary);
+      transition: all var(--transition);}
+.modal-close:hover{background: var(--primary);
+      color: white;
+      transform: rotate(4deg);}
+.modal-body{padding: 22px;}
+.autosave-pill{display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 7px 10px;
+      border: 1px solid rgba(76,175,80,.22);
+      border-radius: 99px;
+      background: rgba(76,175,80,.08);
+      color: #347b38;
+      font-size: 10px;
+      font-weight: 800;}
+.edit-identity-strip{display: grid;
+      grid-template-columns: 96px minmax(0,1fr);
+      gap: 18px;
+      align-items: center;
+      margin-bottom: 22px;
+      padding: 18px;
+      border: 1px solid var(--border);
+      border-radius: 17px;
+      background: linear-gradient(120deg, var(--cream), rgba(255,255,255,.9));}
+.edit-avatar-container{display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 7px;}
+.edit-avatar-bubble{position: relative;
+      display: grid;
+      place-items: center;
+      width: 80px;
+      height: 80px;
+      overflow: hidden;
+      border: 3px solid white;
+      border-radius: 12px;
+      background: var(--cream);
+      color: var(--primary);
+      box-shadow: 0 0 0 1px var(--border);
+      font-size: 23px;
+      font-weight: 800;
+      cursor: pointer;
+      transition: transform var(--transition), box-shadow var(--transition);}
+.edit-avatar-bubble:hover{transform: scale(1.06);
+      box-shadow: 0 0 0 4px rgba(181,139,63,.4);}
+.edit-avatar-bubble img{position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;}
+.avatar-camera-overlay{position: absolute;
+      inset: auto 0 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 28px;
+      color: white;
+      background: rgba(20,54,43,.8);
+      font-size: 11px;}
+.avatar-clear-link{border: 0;
+      background: transparent;
+      color: var(--primary);
+      font-size: 10px;
+      font-weight: 700;}
+.edit-photo-lock-tag{color: var(--primary);}
+.edit-names-group, .edit-grid-col{display: grid;
+      gap: 15px;
+      min-width: 0;}
+.edit-grid-two-col{display: grid;
+      grid-template-columns: repeat(2,minmax(0,1fr));
+      gap: 18px;}
+.compact-field{min-width: 0;}
+.compact-field label{display: block;
+      margin-bottom: 7px;
+      color: #6b5657;
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: .08em;}
+.input-shell{position: relative;
+      display: flex;
+      align-items: center;}
+.field-icon{position: absolute;
+      left: 13px;
+      z-index: 1;
+      color: var(--primary);
+      font-size: 12px;
+      pointer-events: none;}
+.input-shell input, .input-shell textarea, .compact-date-input{width: 100%;
+      min-width: 0;
+      min-height: 44px;
+      padding: 11px 13px 11px 37px;
+      border: 1px solid var(--border);
+      border-radius: 11px;
+      background: white;
+      color: var(--text);
+      font-size: 12px;
+      transition: border-color var(--transition), box-shadow var(--transition);}
+.input-shell input:focus, .input-shell textarea:focus, .compact-date-input:focus{border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(20,54,43,.08);
+      outline: none;}
+.input-shell textarea{min-height: 80px;
+      resize: vertical;}
+.textarea-shell{align-items: flex-start;}
+.textarea-shell .field-icon{top: 14px;}
+.field-label-row{display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 8px;}
+.dob-pill-badge{color: var(--primary);
+      font-size: 10px;
+      font-weight: 800;}
+.dob-age-combined{display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 8px;}
+.compact-date-input{flex: 1 1 145px;
+      padding-left: 12px;}
+.inline-age-chip{display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      min-height: 40px;
+      padding: 8px 11px;
+      border: 1px solid rgba(181,139,63,.4);
+      border-radius: 10px;
+      background: #F4ECD8;
+      color: #78591f;
+      font-size: 11px;}
+.gender-segmented-bar{display: grid;
+      grid-template-columns: repeat(2,minmax(0,1fr));
+      gap: 7px;}
+.gender-pill-btn{min-height: 44px;
+      padding: 9px;
+      border: 1px solid var(--border);
+      border-radius: 11px;
+      background: white;
+      color: #65585a;
+      font-size: 12px;
+      font-weight: 700;
+      transition: all var(--transition);}
+.gender-pill-btn.active{border-color: var(--primary);
+      background: var(--cream);
+      color: var(--primary-dark);}
+.edit-compact-footer{display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 22px;
+      padding-top: 16px;
+      border-top: 1px solid var(--border);}
+.autosave-hint{color: var(--text-muted);
+      font-size: 11px;}
+.btn-compact-done{min-height: 44px;
+      padding: 10px 20px;
+      border: 0;
+      border-radius: 12px;
+      background: var(--primary);
+      color: white;
+      font-size: 12px;
+      font-weight: 800;
+      transition: background var(--transition), transform var(--transition);}
+.btn-compact-done:hover{transform: translateY(-2px);
+      background: var(--primary-dark);}
+.toast-container{position: fixed;
+      right: 20px;
+      bottom: 20px;
+      z-index: 300;
+      display: grid;
+      gap: 10px;
+      width: min(360px, calc(100% - 40px));
+      pointer-events: none;}
+footer{border-top: 1px solid var(--border);
+      background: rgba(251,249,245,.7);}
+@keyframes modal-enter{from { opacity: 0; transform: translateY(10px) scale(.99); }
+      to { opacity: 1; transform: translateY(0) scale(1); }}
+@media (min-width: 1025px){.directory-content-wrapper[data-view-mode="grid"]{display: grid;
+        grid-template-columns: repeat(4,minmax(0,1fr));
+        gap: 18px;}}
+@media (min-width: 768px) and (max-width: 1024px){.wrap{width: calc(100% - 32px);}
+.hero-banner{width: calc(100% - 32px);}
+.nav{align-items: flex-start; flex-direction: column; gap: 12px;}
+.navlinks{justify-content: flex-start;}
+.directory-content-wrapper[data-view-mode="grid"]{display: grid;
+        grid-template-columns: repeat(3,minmax(0,1fr));
+        gap: 14px;}}
+@media (max-width: 767px){.wrap{width: calc(100% - 24px);}
+.hero-banner{width: calc(100% - 24px); margin-block: 14px 20px;}
+.nav{align-items: stretch; flex-direction: column; gap: 12px; padding-block: 12px;}
+.brand-icon{width: 43px; height: 43px; flex-basis: 43px;}
+.navlinks{display: grid; grid-template-columns: repeat(2,minmax(0,1fr));}
+.tab-btn, .btn-export-nav{width: 100%; padding-inline: 8px; font-size: 11px;}
+.hero-title{align-items: flex-start; flex-direction: column; gap: 18px;}
+.hero-inner{padding: 25px 21px;}
+.hero-title h2{font-size: 29px;}
+.hero-title p{font-size: 12px;}
+.toolbar{padding: 12px;}
+.search-box{flex-basis: 100%; min-width: 0;}
+.filter-select{flex-basis: calc(50% - 6px); font-size: 10px;}
+.directory-control-bar{align-items: flex-start; flex-direction: column;}
+.view-mode-toggle{width: 100%;}
+.view-mode-btn{flex: 1; padding-inline: 6px; font-size: 10px;}
+.directory-content-wrapper[data-view-mode="grid"]{display: grid;
+        grid-template-columns: repeat(2,minmax(0,1fr));
+        gap: 10px;}
+.modal-backdrop{padding: 10px; align-items: flex-start;}
+.modal-dialog{max-height: calc(100dvh - 20px); border-radius: 17px; margin-block: auto;}
+.modal-head{padding: 13px 15px;}
+.modal-body{padding: 15px;}
+.edit-identity-strip{grid-template-columns: 1fr; justify-items: center; padding: 15px;}
+.edit-names-group{width: 100%;}
+.edit-grid-two-col{grid-template-columns: 1fr; gap: 15px;}
+.edit-head-left{align-items: flex-start; flex-direction: column; gap: 3px;}
+.autosave-pill{display: none;}}
+@media (prefers-reduced-motion: reduce){*, *::before, *::after{scroll-behavior: auto !important;
+        animation-duration: .01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: .01ms !important;}}
+body{background:#FBF9F5;color:#1C1917}
+:root{--maternal:#8B4A6B;--maternal-bg:#F3E4EB}
+.meta-tag.branch.branch-maternal{background:rgba(139,74,107,.12);color:#7A3A5B}
+.lineage-btn.active{background:var(--primary);border-color:var(--primary);color:#fff}
+.hero-title h2{font-size:clamp(40px,5.2vw,60px);line-height:1.02;letter-spacing:-.01em}
+.hero-eyebrow,.brand small,.hero-student span,.gen-bar-label,.vital-label{font-family:"JetBrains Mono",ui-monospace,monospace}
+.tab-btn[aria-current=page]{background:var(--ruby);color:#fff;border-color:var(--ruby-deep);box-shadow:0 4px 14px rgba(20,54,43,.28)}
+.btn-export-nav[aria-current=page]{background:var(--primary);color:#fff;border-color:var(--primary)}
+.hero-banner .sync-badge{background:#fff}
+main.wrap{padding-bottom:36px}
+footer{margin-top:24px;border-top:1px solid var(--border);background:var(--cream);color:var(--text-muted);font-size:12px}
+.foot-wrap{display:flex;flex-wrap:wrap;justify-content:space-between;gap:6px 24px;padding:18px 0}
+.btn-primary{display:inline-flex;gap:8px;align-items:center;justify-content:center;min-height:42px;padding:0 18px;border-radius:12px;background:var(--primary);color:#fff;font-weight:700;font-size:13px}
+.btn-primary:hover{background:var(--primary-dark)}
+.card-avatar-container{display:grid;place-items:center;flex:none;overflow:hidden;width:60px;height:60px;border-radius:14px;background:var(--male-bg);color:var(--male-fg);font-weight:800}
+.card-avatar-container.female{background:var(--female-bg);color:var(--female-fg)}
+.avatar-img{width:100%;height:100%;object-fit:cover}
+.card-profile-row{display:flex;gap:14px;align-items:center}
+.card-profile-info{min-width:0}
+.card-meta-tags{display:flex;flex-wrap:wrap;gap:6px}
+.card-family-badge,.card-relation-badge{display:inline-flex;gap:6px;align-items:center;padding:3px 10px;border-radius:99px;background:var(--cream);color:var(--primary-dark);font-size:11px;font-weight:700}
+.directory-empty-state{padding:56px 20px;border:1px dashed var(--border);border-radius:var(--radius);background:var(--glass);text-align:center}
+.directory-empty-state h3{margin:0 0 6px;font:700 20px "Cormorant Garamond", Georgia, serif;color:var(--primary-dark)}
+.directory-empty-state p{max-width:46ch;margin:0 auto 16px;color:var(--text-muted)}
+.empty-icon{margin-bottom:10px;font-size:28px;color:var(--primary-light)}
+.profile-modal-body{padding:0}
+.profile-hero-banner{padding:24px;color:#fff;background:linear-gradient(135deg,var(--primary-dark),var(--primary))}
+.banner-maternal{background:linear-gradient(135deg,#5E2F49,var(--maternal))}
+.banner-immediate{background:linear-gradient(135deg,#7A5A14,var(--gold))}
+.banner-author{background:linear-gradient(135deg,var(--primary-dark),var(--gold))}
+.profile-hero-main{display:flex;gap:18px;align-items:center}
+.profile-avatar-wrap{position:relative;display:grid;place-items:center;flex:none;width:84px;height:84px;overflow:hidden;border:2px solid rgba(255,255,255,.5);border-radius:14px;background:rgba(255,255,255,.18)}
+.profile-avatar-img{width:100%;height:100%;object-fit:cover}
+.profile-avatar-placeholder{font-size:22px;opacity:.8}
+.profile-author-crown{position:absolute;right:4px;bottom:4px;padding:1px 7px;border-radius:99px;background:var(--gold);color:#3b2a05;font-size:10px;font-weight:800}
+.profile-hero-details{display:grid;gap:8px;min-width:0}
+.profile-hero-tags,.profile-pill-strip{display:flex;flex-wrap:wrap;gap:6px}
+.profile-hero-banner [class*=badge-],.profile-hero-banner [class*=rel-],.profile-hero-banner [class*=branch-],.profile-meta-pill{display:inline-flex;gap:6px;align-items:center;padding:3px 10px;border:0;border-radius:99px;background:rgba(255,255,255,.18)!important;color:#fff!important;font-size:12px;font-weight:700}
+.profile-hero-name{margin:0;font:700 26px/1.15 "Cormorant Garamond", Georgia, serif;color:#fff}
+.profile-hero-sub{display:flex;flex-wrap:wrap;gap:8px;font-size:13px;opacity:.92}
+.profile-modal-content{display:grid;gap:18px;padding:22px 24px}
+.profile-genealogy-bar{display:flex;gap:12px;align-items:center;padding:12px 14px;border:1px solid var(--border);border-radius:14px;background:var(--cream)}
+.gen-bar-icon{font-size:18px;color:var(--primary)}
+.gen-bar-text{display:grid;min-width:0}
+.gen-bar-label{font-size:10px;font-weight:800;letter-spacing:.1em;color:var(--text-muted)}
+.gen-bar-value{font-weight:700;color:var(--primary-dark)}
+.profile-vitals-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px}
+.vital-metric-card{display:flex;gap:12px;align-items:center;padding:12px 14px;border:1px solid var(--border);border-radius:14px;background:#fff}
+.vital-icon-box{display:grid;place-items:center;flex:none;width:38px;height:38px;border-radius:11px;background:rgba(20,54,43,.1);color:var(--primary)}
+.vital-icon-box.green{background:rgba(76,175,80,.15);color:#2f7d33}
+.vital-info{display:grid;min-width:0}
+.vital-label{font-size:9.5px;font-weight:800;letter-spacing:.1em;color:var(--muted)}
+.vital-value{font-weight:800}.vital-sub{font-size:12px;color:var(--text-muted)}
+.profile-kinship-section{display:grid;gap:10px}
+.kinship-sec-title{display:flex;gap:8px;align-items:center;font-weight:800;color:var(--primary-dark)}
+.kinship-cards-grid,.kinship-chips-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:8px}
+.kinship-member-card,.kinship-chip-btn{display:flex;gap:10px;align-items:center;padding:10px 12px;border:1px solid var(--border);border-radius:14px;background:#fff;text-align:left;cursor:pointer;transition:border-color .2s,transform .2s}
+.kinship-member-card:hover,.kinship-chip-btn:hover{border-color:var(--primary);transform:translateY(-2px)}
+.kinship-avatar,.chip-avatar{display:grid;place-items:center;flex:none;width:38px;height:38px;border-radius:10px;background:var(--male-bg);color:var(--male-fg);font-size:13px;font-weight:800}
+.chip-avatar{width:30px;height:30px;font-size:11px}
+.kinship-avatar.female,.chip-avatar.female{background:var(--female-bg);color:var(--female-fg)}
+.kinship-meta,.chip-info{display:grid;flex:1;min-width:0}
+.kinship-relation{font-size:11px;color:var(--text-muted)}
+.kinship-name,.chip-name{overflow:hidden;font-weight:700;text-overflow:ellipsis;white-space:nowrap}
+.kinship-sub,.chip-sub{font-size:12px;color:var(--text-muted)}
+.kinship-arrow{color:var(--muted)}
+.kinship-empty-banner{display:flex;gap:10px;align-items:center;padding:12px;border:1px dashed var(--border);border-radius:14px;color:var(--text-muted)}
+.profile-modal-footer{position:sticky;bottom:0;display:flex;flex-wrap:wrap;gap:10px;justify-content:space-between;padding:14px 24px;border-top:1px solid var(--border);background:rgba(251,249,245,.96)}
+.footer-left-actions{display:flex;flex-wrap:wrap;gap:8px}
+.btn-profile-action,.btn-profile-close{display:inline-flex;gap:7px;align-items:center;min-height:40px;padding:0 14px;border:1px solid var(--border);border-radius:12px;background:#fff;color:var(--primary);font-size:12px;font-weight:700}
+.btn-profile-action:hover{border-color:var(--primary)}
+.btn-profile-close{border-color:var(--primary);background:var(--primary);color:#fff}
+.toast-item{position:relative;display:flex;gap:12px;align-items:flex-start;overflow:hidden;padding:12px 14px;border-radius:14px;background:var(--primary-dark);color:#fff;box-shadow:0 12px 32px rgba(20,54,43,.3);opacity:0;transform:translateY(10px);transition:opacity .24s,transform .24s;pointer-events:auto}
+.toast-item.show{opacity:1;transform:none}.toast-item.hide{opacity:0;transform:translateY(6px)}
+.toast-icon{font-size:18px;color:#8fd49a}.toast-icon.warn{color:#f0c36a}.toast-icon.info{color:#9ccbe8}
+.toast-title{font-size:13px;font-weight:800}.toast-desc{font-size:12px;opacity:.85}
+.toast-progress{position:absolute;left:0;bottom:0;height:3px;background:var(--gold);animation:toastbar 2s linear forwards}
+@keyframes toastbar{from{width:100%}to{width:0}}
+</style>
+</head>
+<body>
+<header><div class="wrap nav"><a class="brand" href="index.html" aria-label="Ammar Syaathir Family Heritage Archive home"><div class="brand-icon"><i class="fa-solid fa-sitemap"></i></div><div><h1>Ammar Syaathir Family Heritage</h1><small>Heritage archive &middot; four generations</small></div></a><nav class="navlinks" aria-label="Pages"><a class="tab-btn" href="family.html"><i class="fa-solid fa-diagram-project"></i> Family Tree</a><a class="tab-btn" href="directory.html" aria-current="page"><i class="fa-solid fa-address-book"></i> Directory</a><a class="tab-btn" href="stats.html"><i class="fa-solid fa-chart-pie"></i> Heritage Stats</a><button id="btnAddPerson" class="btn-export-nav" type="button"><i class="fa-solid fa-user-plus"></i> Add Member</button><button id="btnExportJson" class="btn-export-nav" type="button" title="Export the current family data as JSON"><i class="fa-solid fa-cloud-arrow-down"></i> Export JSON</button></nav></div></header>
+<section class="hero-banner"><div class="hero-inner"><div class="hero-eyebrow"><i class="fa-solid fa-seedling"></i> Member directory</div><div class="hero-title"><div><h2>Everyone in the family, in one place.</h2><p>Search, filter and sort every documented relative as cards, by family, or in a table.</p></div><span class="sync-badge" id="liveSyncBadge"><i class="fa-solid fa-cloud"></i> Connecting</span></div></div></section><main class="wrap"><div class="toolbar">
+        <div class="search-box">
+          <i class="fa-solid fa-magnifying-glass"></i>
+          <input type="search" id="searchFamily"
+            placeholder="Search family members by name..."
+            autocomplete="off" aria-label="Search family directory">
+        </div>
+
+        <div class="filter-group">
+          <select id="filterFamilyUnit" class="filter-select" aria-label="Filter by family unit">
+            <option value="all">Every Family Unit</option>
+            <option value="core_ammar">Keluarga Asas Ammar</option>
+            <option value="ms_maksulaili">Keluarga Maksu Laili &amp; Azman</option>
+            <option value="mt_makteh">Keluarga Makteh</option>
+            <option value="pl_paklong">Keluarga Paklong</option>
+            <option value="pn_pakngah">Keluarga Pakngah</option>
+            <option value="an_aciknora">Keluarga Acik Nora &amp; Izzan</option>
+            <option value="zn_zainal">Keluarga Zainal &amp; Nolina</option>
+            <option value="az_azhar">Keluarga Azhar &amp; Norita</option>
+            <option value="mz_mazri">Keluarga Mazri &amp; Nordin</option>
+            <option value="ym_yusma">Keluarga Yusma &amp; Hamzah</option>
+            <option value="gp_paternal">Atok Isa &amp; Nenek Zaharah</option>
+            <option value="gp_maternal">Atok Zain &amp; Nenek Noraini</option>
+          </select>
+
+          <select id="filterBranch" class="filter-select" aria-label="Filter by branch">
+            <option value="all">Every Branch</option>
+            <option value="immediate">Immediate Family</option>
+            <option value="paternal">Paternal</option>
+            <option value="maternal">Maternal</option>
+          </select>
+
+          <select id="filterGen" class="filter-select" aria-label="Filter by generation">
+            <option value="all">Every Generation</option>
+            <option value="1">Gen 1: Grandparents</option>
+            <option value="2">Gen 2: Parents &amp; Uncles/Aunts</option>
+            <option value="3">Gen 3: Ammar &amp; Cousins</option>
+            <option value="4">Gen 4: Nieces</option>
+          </select>
+
+          <select id="filterGender" class="filter-select" aria-label="Filter by gender">
+            <option value="all">Every Gender</option>
+            <option value="male">Male</option>
+            <option value="female">Female</option>
+          </select>
+          <select id="filterCity" class="filter-select" aria-label="Filter by city">
+            <option value="all">Every City</option>
+          </select>
+
+          <select id="sortDirectoryBy" class="filter-select" aria-label="Sort family directory">
+            <option value="default">Sort: Generation</option>
+            <option value="age-desc">Age: Oldest First</option>
+            <option value="age-asc">Age: Youngest First</option>
+            <option value="name-asc">Name: A to Z</option>
+            <option value="family">Group: Family Household</option>
+          </select>
+
+          <button id="resetFilters" class="filter-select" type="button">
+            <i class="fa-solid fa-arrow-rotate-left"></i> Reset
+          </button>
+        </div>
+      </div>
+
+      <div class="directory-control-bar">
+        <div class="directory-summary-counter" aria-live="polite">
+          <span>Showing</span>
+          <b id="dirVisibleCount">64</b>
+          <span>of</span>
+          <span id="dirTotalCount">64</span>
+          <span>documented family members</span>
+          <span id="activeFilterBadgeContainer" class="active-filter-badges"></span>
+        </div>
+
+        <div class="view-mode-toggle" role="group" aria-label="Directory layout">
+          <button class="view-mode-btn" data-view-mode="grid" type="button">
+            <i class="fa-solid fa-grip"></i> Cards
+          </button>
+          <button class="view-mode-btn active" data-view-mode="grouped" type="button">
+            <i class="fa-solid fa-house-chimney-user"></i> By Family
+          </button>
+          <button class="view-mode-btn" data-view-mode="table" type="button">
+            <i class="fa-solid fa-table-list"></i> Table
+          </button>
+        </div>
+      </div>
+
+      <div class="directory-content-wrapper" id="directoryGrid" data-view-mode="grid">
+        <!-- Generated by familyApp.js -->
+      </div>
+</main>
+<!-- PERSON PROFILE MODAL -->
+  <div class="modal-backdrop" id="personModal"
+    role="dialog" aria-modal="true" aria-hidden="true"
+    aria-labelledby="modalPersonName">
+    <div class="modal-dialog profile-modal-dialog">
+      <div class="modal-head profile-modal-head">
+        <div class="profile-head-left">
+          <span class="profile-head-pill">
+            <i class="fa-solid fa-id-card-clip"></i>
+            <span id="modalPersonName">Member Profile</span>
+          </span>
+        </div>
+        <div class="profile-head-actions">
+          <button class="modal-close" id="closeModal" type="button" aria-label="Close profile">
+            <i class="fa-solid fa-xmark"></i>
+          </button>
+        </div>
+      </div>
+      <div class="modal-body profile-modal-body" id="modalPersonBody">
+        <!-- Generated by familyApp.js -->
+      </div>
+    </div>
+  </div>
+<!-- EDIT MEMBER MODAL -->
+  <div class="modal-backdrop" id="editPersonModal"
+    role="dialog" aria-modal="true" aria-hidden="true"
+    aria-labelledby="editModalTitle">
+    <div class="modal-dialog edit-compact-dialog">
+      <div class="modal-head edit-compact-head">
+        <div class="edit-head-left">
+          <span class="edit-head-tag">
+            <i class="fa-solid fa-pen-to-square"></i> Member details
+          </span>
+          <h3 id="editModalTitle" style="margin:0;font-size:16px">Edit Profile</h3>
+        </div>
+
+        <div class="edit-head-right">
+          <div class="autosave-pill saved" id="editAutoSavePill">
+            <i class="fa-solid fa-cloud-arrow-up"></i>
+            <span>Auto-saved</span>
+          </div>
+          <button class="modal-close" id="closeEditModal" type="button" aria-label="Close editor">
+            <i class="fa-solid fa-xmark"></i>
+          </button>
+        </div>
+      </div>
+
+      <div class="modal-body edit-compact-body">
+        <form id="editPersonForm" autocomplete="off" onsubmit="return false">
+          <div class="edit-identity-strip">
+            <div class="edit-avatar-container" id="photoUploadSection">
+              <button type="button" class="edit-avatar-bubble" id="btnTriggerPhoto"
+                title="Upload or change profile photo" aria-label="Upload profile photo">
+                <img id="editAvatarPreview" src="" alt="Avatar" style="display:none">
+                <span id="editAvatarInitials">AS</span>
+                <span class="avatar-camera-overlay" aria-hidden="true">
+                  <i class="fa-solid fa-camera"></i>
+                </span>
+              </button>
+
+              <input type="file" id="editAvatarInput"
+                accept="image/*" hidden>
+
+              <button type="button" id="btnRemoveAvatar" class="avatar-clear-link"
+                title="Remove custom photo" style="display:none">
+                <i class="fa-solid fa-xmark"></i> Remove photo
+              </button>
+            </div>
+
+            <div id="photoNotice" class="edit-photo-lock-tag"
+              style="display:none" title="Photo upload restriction">
+              <i class="fa-solid fa-lock"></i>
+            </div>
+
+            <div class="edit-names-group">
+              <div class="compact-field">
+                <label for="editName">FULL NAME</label>
+                <div class="input-shell">
+                  <i class="fa-solid fa-user field-icon"></i>
+                  <input type="text" id="editName" placeholder="Enter full name" required>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="edit-grid-two-col">
+            <div class="edit-grid-col">
+              <div class="compact-field">
+                <div class="field-label-row">
+                  <label for="editDobPicker">DATE OF BIRTH</label>
+                  <span id="dobFormattedBadge" class="dob-pill-badge">Not set</span>
+                </div>
+
+                <div class="dob-age-combined">
+                  <input type="date" id="editDobPicker" class="compact-date-input">
+                  <input type="hidden" id="editDob">
+                  <div class="inline-age-chip" id="inlineAgeBadge">
+                    <i class="fa-solid fa-cake-candles"></i>
+                    <span id="ageAutoDisplay">Age <b>—</b></span>
+                  </div>
+                  <input type="hidden" id="editAge">
+                </div>
+              </div>
+
+              <div class="compact-field">
+                <label>GENDER</label>
+                <div class="gender-segmented-bar" role="group" aria-label="Select gender">
+                  <button type="button" class="gender-pill-btn active"
+                    id="btnGenderMale" data-gender="male">
+                    <i class="fa-solid fa-mars"></i> Male
+                  </button>
+                  <button type="button" class="gender-pill-btn"
+                    id="btnGenderFemale" data-gender="female">
+                    <i class="fa-solid fa-venus"></i> Female
+                  </button>
+                </div>
+                <input type="hidden" id="editGender" value="male">
+              </div>
+            </div>
+
+            <div class="edit-grid-col">
+              <div class="compact-field">
+                <label for="editFamilyLabel">FAMILY LABEL</label>
+                <div class="input-shell">
+                  <i class="fa-solid fa-people-roof field-icon"></i>
+                  <select id="editFamilyLabel" required>
+                    <option value="">Select family label</option>
+                    <option value="Father">Father</option>
+                    <option value="Mother">Mother</option>
+                    <option value="Grandfather">Grandfather</option>
+                    <option value="Grandmother">Grandmother</option>
+                    <option value="Son">Son</option>
+                    <option value="Daughter">Daughter</option>
+                    <option value="Brother">Brother</option>
+                    <option value="Sister">Sister</option>
+                    <option value="Uncle">Uncle</option>
+                    <option value="Aunt">Aunt</option>
+                    <option value="Cousin">Cousin</option>
+                    <option value="Nephew">Nephew</option>
+                    <option value="Niece">Niece</option>
+                    <option value="ME">ME</option>
+                    <option value="Other">Other</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="compact-field">
+                <label for="editGeneration">GENERATION</label>
+                <div class="input-shell">
+                  <i class="fa-solid fa-layer-group field-icon"></i>
+                  <select id="editGeneration">
+                    <option value="1">Generation 1</option>
+                    <option value="2">Generation 2</option>
+                    <option value="3">Generation 3</option>
+                    <option value="4">Generation 4</option>
+                  </select>
+                </div>
+              </div>
+              <div class="compact-field">
+                <label for="editBranch">FAMILY BRANCH</label>
+                <div class="input-shell">
+                  <i class="fa-solid fa-code-branch field-icon"></i>
+                  <select id="editBranch">
+                    <option value="immediate">Immediate</option>
+                    <option value="paternal">Paternal</option>
+                    <option value="maternal">Maternal</option>
+                  </select>
+                </div>
+              </div>
+              <div class="compact-field">
+                <label for="editCity">RESIDENCE / CITY</label>
+                <div class="input-shell">
+                  <i class="fa-solid fa-location-dot field-icon"></i>
+                  <select id="editCity">
+                    <option value="">Select city</option>
+                    <option value="Rembau">Rembau</option>
+                    <option value="Seremban">Seremban</option>
+                    <option value="Bandar Saujana Putra">Bandar Saujana Putra</option>
+                    <option value="Kuala Lumpur">Kuala Lumpur</option>
+                    <option value="Kajang">Kajang</option>
+                    <option value="Putrajaya">Putrajaya</option>
+                    <option value="Shah Alam">Shah Alam</option>
+                  </select>
+                </div>
+              </div>
+              <div class="compact-field">
+                <label for="editFamilyUnit">FAMILY UNIT</label>
+                <div class="input-shell">
+                  <i class="fa-solid fa-house-chimney-user field-icon"></i>
+                  <select id="editFamilyUnit">
+                    <option value="core_ammar">core_ammar · Keluarga Asas Ammar (Immediate)</option>
+                    <option value="unit_pl">unit_pl · Keluarga Paklong</option>
+                    <option value="unit_pn">unit_pn · Keluarga Pakngah</option>
+                    <option value="unit_mt">unit_mt · Keluarga Makteh</option>
+                    <option value="unit_an">unit_an · Keluarga Acik Nora</option>
+                    <option value="unit_ms">unit_ms · Keluarga Maksu Laili</option>
+                    <option value="unit_zn">unit_zn · Keluarga Paklong Zainal</option>
+                    <option value="unit_az">unit_az · Keluarga Pakngah Azhar</option>
+                    <option value="unit_mz">unit_mz · Keluarga Pakcik Mazri</option>
+                    <option value="unit_ym">unit_ym · Keluarga Maksu Yusma</option>
+                    <option value="root_paternal">root_paternal · Keluarga Atok Isa &amp; Nenek Zaharah</option>
+                    <option value="root_maternal">root_maternal · Keluarga Atok Zain &amp; Nenek Noraini</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="compact-field" style="margin-top:14px">
+            <label for="editBio">BIOGRAPHY &amp; HERITAGE NOTES</label>
+            <div class="input-shell textarea-shell">
+              <i class="fa-solid fa-feather-pointed field-icon"></i>
+              <textarea id="editBio" rows="2" placeholder="Family memories and profile notes"></textarea>
+            </div>
+          </div>
+
+          <div class="compact-field" style="margin-top:18px">
+            <label for="editFatherId">FATHER</label>
+            <div class="input-shell">
+              <i class="fa-solid fa-person field-icon"></i>
+              <select id="editFatherId">
+                <option value="">Select father (optional)</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="compact-field" style="margin-top:14px">
+            <label for="editMotherId">MOTHER</label>
+            <div class="input-shell">
+              <i class="fa-solid fa-person-dress field-icon"></i>
+              <select id="editMotherId">
+                <option value="">Select mother (optional)</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="compact-field" style="margin-top:16px">
+            <label for="editSpouseSelect">SPOUSE / LIFE PARTNER</label>
+            <div id="selectedSpousesContainer" class="selected-chips-container"></div>
+            <div class="input-shell" style="margin-top:8px;">
+              <i class="fa-solid fa-heart field-icon"></i>
+              <select id="editSpouseSelect">
+                <option value="">+ Select spouse to add...</option>
+              </select>
+            </div>
+            <input type="hidden" id="editSpouses">
+          </div>
+
+          <div class="compact-field" style="margin-top:14px">
+            <label for="editChildSelect">CHILDREN</label>
+            <div id="selectedChildrenContainer" class="selected-chips-container"></div>
+            <div class="input-shell" style="margin-top:8px;">
+              <i class="fa-solid fa-children field-icon"></i>
+              <select id="editChildSelect">
+                <option value="">+ Select child to add (add one by one)...</option>
+              </select>
+            </div>
+            <input type="hidden" id="editChildren">
+          </div>
+
+          <div class="compact-field" style="margin-top:16px">
+            <label for="editIsInLaw" style="display:flex;align-items:center;gap:10px;letter-spacing:0">
+              <input type="checkbox" id="editIsInLaw">
+              This member is an in-law
+            </label>
+          </div>
+
+          <div class="edit-compact-footer">
+            <span class="autosave-hint">
+              <i class="fa-solid fa-shield-heart" style="color:#8b3a3a"></i>
+              Changes are saved to the shared family database.
+            </span>
+            <div style="display:flex;gap:10px;flex-wrap:wrap">
+              <button type="button" class="btn-compact-done" id="btnDeletePerson" style="background:#a32929">
+                <i class="fa-solid fa-trash"></i> Delete
+              </button>
+              <button type="button" class="btn-compact-done" id="btnDoneEdit">
+                <i class="fa-solid fa-check"></i> Save Profile
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+<div class="toast-container" id="toastContainer" aria-live="polite" aria-atomic="true"></div>
+<footer><div class="wrap foot-wrap"><span>&copy; 2026 Muhammad Ammar Syaathir &middot; ITT588 Lab Work 4</span><span>Faculty of Computer &amp; Mathematical Sciences, UiTM &middot; Lecturer: Sir Shahadan Saad</span></div></footer>
+<script src="public/js/familyApp.js"></script>
+<script>
+/**
+ * directory-patch.js
+ * Layout / UX layer for the Directory page. Load AFTER familyApp.js.
+ *
+ *  - Table view now shows every field the card shows
+ *    (household, relation, gen, branch, age, DOB, residence, full profession,
+ *     genealogy line, bio, and the Tree / Edit / Profile / Copy actions).
+ *  - By Family view is a collapsible household list with clear headers.
+ *  - Keeps the Cards / By Family / Table buttons and the wrapper in sync.
+ *
+ * It only replaces rendering methods. Data loading, filtering, editing and
+ * saving are untouched, so it works with the existing familyApp.js.
+ */
+(() => {
+  "use strict";
+
+  if (typeof FamilyApp === "undefined") return;
+
+  const esc = (value) =>
+    String(value ?? "")
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;");
+
+  const firstPart = (text) => (text ? String(text).split(",")[0] : "-");
+
+  /* ------------------------------------------------------------------
+     TABLE: only Member, Household, BOD, City, Action
+     ------------------------------------------------------------------ */
+  FamilyApp.renderDirectoryTableView = function () {
+    const rows = this.filtered
+      .map((p) => {
+        const unit = p.familyUnit || "core_ammar";
+        const label = p.familyLabel || "Keluarga";
+        const initials = this.getCleanInitials(p);
+        const isMe = p.id === "c_ammar";
+        const gender = p.gender || "male";
+
+        return `
+          <tr data-id="${esc(p.id)}" class="${isMe ? "is-author" : ""}">
+            <td class="col-member">
+              <div class="dt-member">
+                <div class="card-avatar-container ${esc(gender)}">
+                  ${
+                    p.avatar
+                      ? `<img src="${esc(p.avatar)}" alt="${esc(p.name)}" class="avatar-img" />`
+                      : `<span class="avatar-initials">${esc(initials)}</span>`
+                  }
+                </div>
+                <div>
+                  <strong class="dt-name">${esc(p.name)}${
+                    isMe ? `<span class="dt-me"><i class="fa-solid fa-crown"></i> ME</span>` : ""
+                  }</strong>
+                  <span class="meta-tag nickname dt-nick">${esc(p.nickname || "Relative")}</span>
+                </div>
+              </div>
+            </td>
+
+            <td>
+              <span class="card-family-badge badge-${esc(unit)}" title="Household: ${esc(label)}">
+                <i class="fa-solid fa-house-chimney-window"></i>
+                <span>${esc(label)}</span>
+              </span>
+            </td>
+
+            <td class="dt-age">
+              <b>${esc(p.age ?? "-")}</b> yrs
+              <small>${esc(p.dob || "-")}</small>
+            </td>
+
+            <td title="${esc(p.city || "-")}">${esc(firstPart(p.city))}</td>
+
+            <td class="col-actions">
+              <div class="dt-actions">
+                <button class="btn-card-action btn-tree-spotlight" data-locate-tree-id="${esc(p.id)}" type="button" title="Spotlight ${esc(p.name)} on the family tree" aria-label="Show in tree">
+                  <i class="fa-solid fa-crosshairs"></i>
+                </button>
+                <button class="btn-card-action btn-edit-card" data-edit-id="${esc(p.id)}" type="button" title="Edit profile" aria-label="Edit profile">
+                  <i class="fa-solid fa-pen-to-square"></i>
+                </button>
+                <button class="btn-card-action btn-view-card" data-view-id="${esc(p.id)}" type="button" title="View full profile" aria-label="View profile">
+                  <i class="fa-solid fa-id-card-clip"></i>
+                </button>
+                <button class="btn-card-action btn-copy-card" data-copy-id="${esc(p.id)}" type="button" title="Copy profile to clipboard" aria-label="Copy profile">
+                  <i class="fa-solid fa-copy"></i>
+                </button>
+              </div>
+            </td>
+          </tr>`;
+      })
+      .join("");
+
+    return `
+      <div class="directory-table-wrapper">
+        <table class="directory-table">
+          <thead>
+            <tr>
+              <th class="col-member">Member</th>
+              <th>Household</th>
+              <th>BOD</th>
+              <th>City</th>
+              <th class="col-actions">Action</th>
+            </tr>
+          </thead>
+          <tbody>${rows}</tbody>
+        </table>
+      </div>`;
+  };
+
+  /* ------------------------------------------------------------------
+     BY FAMILY: collapsible household sections
+     ------------------------------------------------------------------ */
+  FamilyApp.renderDirectoryGroupedView = function () {
+    const groups = {};
+    this.filtered.forEach((p) => {
+      const id = p.familyUnit || "core_ammar";
+      if (!groups[id]) groups[id] = { id, label: p.familyLabel || "Keluarga", members: [] };
+      groups[id].members.push(p);
+    });
+
+    const list = Object.values(groups).sort((a, b) => b.members.length - a.members.length);
+
+    const sections = list
+      .map((g) => {
+        const heads =
+          g.members
+            .filter((m) => m.generation <= 2)
+            .slice(0, 2)
+            .map((m) => m.nickname || String(m.name).split(" ")[0])
+            .join(" & ") ||
+          g.members[0]?.nickname ||
+          "Family head";
+
+        const gens = g.members.map((m) => Number(m.generation)).filter(Boolean);
+        const lo = Math.min(...gens);
+        const hi = Math.max(...gens);
+        const genText = gens.length ? (lo === hi ? `Gen ${lo}` : `Gen ${lo}-${hi}`) : "";
+
+        return `
+          <section class="family-group-section unit-${esc(g.id)}" data-group="${esc(g.id)}">
+            <div class="family-group-header" role="button" tabindex="0" aria-expanded="true">
+              <span class="fg-accent stripe-${esc(g.id)}"></span>
+              <div class="fg-title">
+                <span class="card-family-badge badge-${esc(g.id)}">
+                  <i class="fa-solid fa-house-chimney-window"></i> ${esc(g.label)}
+                </span>
+                <span class="fg-heads">Household heads: <b>${esc(heads)}</b></span>
+              </div>
+              <div class="fg-meta">
+                ${genText ? `<span class="fg-chip">${esc(genText)}</span>` : ""}
+                <span class="fg-chip gold"><i class="fa-solid fa-users"></i> ${g.members.length} ${g.members.length === 1 ? "relative" : "relatives"}</span>
+                <span class="fg-chevron"><i class="fa-solid fa-chevron-down"></i></span>
+              </div>
+            </div>
+            <div class="family-group-cards">
+              ${g.members.map((p) => this.renderModernMemberCard(p)).join("")}
+            </div>
+          </section>`;
+      })
+      .join("");
+
+    return `
+      <div class="fg-toolbar">
+        <span>${list.length} ${list.length === 1 ? "household" : "households"} shown. Click a header to open or close it.</span>
+        <button type="button" class="fg-toggle-all" data-fg-toggle-all="collapse">
+          <i class="fa-solid fa-compress"></i> Collapse all
+        </button>
+      </div>
+      ${sections}`;
+  };
+
+  /* ------------------------------------------------------------------
+     Extra behaviour after each render
+     ------------------------------------------------------------------ */
+  const originalAttach = FamilyApp.attachDirectoryEventListeners;
+
+  FamilyApp.attachDirectoryEventListeners = function (container) {
+    if (typeof originalAttach === "function") originalAttach.call(this, container);
+
+    // Table rows open the profile, like the cards do
+    container.querySelectorAll(".directory-table tbody tr[data-id]").forEach((row) => {
+      row.addEventListener("click", (event) => {
+        if (event.target.closest("button, a")) return;
+        this.openPersonModal(row.dataset.id);
+      });
+    });
+
+    // Household open / close (bound once, the container is reused)
+    if (!container.dataset.fgBound) {
+      container.dataset.fgBound = "1";
+
+      const toggleSection = (section, force) => {
+        const collapsed = force ?? !section.classList.contains("is-collapsed");
+        section.classList.toggle("is-collapsed", collapsed);
+        section
+          .querySelector(".family-group-header")
+          ?.setAttribute("aria-expanded", String(!collapsed));
+      };
+
+      container.addEventListener("click", (event) => {
+        const all = event.target.closest("[data-fg-toggle-all]");
+        if (all) {
+          const collapse = all.dataset.fgToggleAll === "collapse";
+          container
+            .querySelectorAll(".family-group-section")
+            .forEach((s) => toggleSection(s, collapse));
+          all.dataset.fgToggleAll = collapse ? "expand" : "collapse";
+          all.innerHTML = collapse
+            ? '<i class="fa-solid fa-expand"></i> Expand all'
+            : '<i class="fa-solid fa-compress"></i> Collapse all';
+          return;
+        }
+        const header = event.target.closest(".family-group-header");
+        if (header) toggleSection(header.closest(".family-group-section"));
+      });
+
+      container.addEventListener("keydown", (event) => {
+        if (event.key !== "Enter" && event.key !== " ") return;
+        const header = event.target.closest(".family-group-header");
+        if (!header) return;
+        event.preventDefault();
+        toggleSection(header.closest(".family-group-section"));
+      });
+    }
+  };
+
+  /* ------------------------------------------------------------------
+     Keep Cards / By Family / Table buttons and the wrapper in sync
+     ------------------------------------------------------------------ */
+  const originalRender = FamilyApp.renderDirectory;
+
+  FamilyApp.renderDirectory = function () {
+    if (typeof originalRender === "function") originalRender.apply(this, arguments);
+
+    const mode = this.directoryViewMode || "grid";
+    const wrapper = document.getElementById("directoryGrid");
+    if (wrapper) wrapper.dataset.viewMode = mode;
+
+    document.querySelectorAll(".view-mode-btn").forEach((btn) => {
+      btn.classList.toggle("active", btn.dataset.viewMode === mode);
+    });
+  };
+})();
+</script>
+<script>
+/* ==========================================================================
+   PHOTO UPLOAD FROM PHONE
+   Phone photos are 3-12 MB. The old code rejected anything over 3 MB, and
+   larger data URLs overflow localStorage (which failed silently).
+   Now every photo is cropped to a square, shrunk to 480 x 480 JPEG
+   (about 40-90 KB) in the browser, then saved.
+   ========================================================================== */
+(() => {
+  "use strict";
+  if (typeof FamilyApp === "undefined") return;
+
+  const SIZE = 480;
+
+  const loadBitmap = (file) =>
+    typeof createImageBitmap === "function"
+      ? createImageBitmap(file, { imageOrientation: "from-image" }).catch(() => loadImage(file))
+      : loadImage(file);
+
+  const loadImage = (file) =>
+    new Promise((resolve, reject) => {
+      const url = URL.createObjectURL(file);
+      const img = new Image();
+      img.onload = () => { URL.revokeObjectURL(url); resolve(img); };
+      img.onerror = () => { URL.revokeObjectURL(url); reject(new Error("decode")); };
+      img.src = url;
+    });
+
+  const toSquareJpeg = async (file) => {
+    const src = await loadBitmap(file);
+    const w = src.width || src.naturalWidth;
+    const h = src.height || src.naturalHeight;
+    const side = Math.min(w, h);
+    const canvas = document.createElement("canvas");
+    canvas.width = SIZE;
+    canvas.height = SIZE;
+    const ctx = canvas.getContext("2d");
+    ctx.fillStyle = "#ffffff";
+    ctx.fillRect(0, 0, SIZE, SIZE);
+    ctx.drawImage(src, (w - side) / 2, (h - side) / 2, side, side, 0, 0, SIZE, SIZE);
+    if (src.close) src.close();
+
+    let quality = 0.86;
+    let out = canvas.toDataURL("image/jpeg", quality);
+    while (out.length > 220000 && quality > 0.4) {
+      quality -= 0.1;
+      out = canvas.toDataURL("image/jpeg", quality);
+    }
+    return out;
+  };
+
+  FamilyApp.handleAvatarUpload = async function (e) {
+    const input = e.target;
+    const file = input.files && input.files[0];
+    if (!file) return;
+
+    // Some phones give an empty type; only reject files that clearly are not images
+    if (file.type && !file.type.startsWith("image/")) {
+      this.showToast("Invalid Image", "Please choose a photo (JPG, PNG or WebP).", "warn");
+      input.value = "";
+      return;
+    }
+
+    this.updateAutoSaveBadge("saving");
+
+    try {
+      const dataUrl = await toSquareJpeg(file);
+      this.currentAvatarBase64 = dataUrl;
+
+      const preview = document.getElementById("editAvatarPreview");
+      const initials = document.getElementById("editAvatarInitials");
+      const removeBtn = document.getElementById("btnRemoveAvatar");
+      if (preview) { preview.src = dataUrl; preview.style.display = "block"; }
+      if (initials) initials.style.display = "none";
+      if (removeBtn) removeBtn.style.display = "inline-block";
+
+      this.triggerAutoSave(true);
+      this.showToast("Photo Updated", "Photo cropped to a square and saved.", "success");
+    } catch (err) {
+      this.updateAutoSaveBadge("saved");
+      this.showToast(
+        "Photo Not Supported",
+        "This photo format cannot be read here (for example HEIC). Choose a JPG or PNG, or set the phone camera to 'Most Compatible'.",
+        "warn"
+      );
+    } finally {
+      input.value = ""; // allows choosing the same photo again
+    }
+  };
+})();
+</script>
+<script>
+/* ==========================================================================
+   Small data / form fixes
+   ========================================================================== */
+(() => {
+  "use strict";
+  if (typeof FamilyApp === "undefined") return;
+
+  /* A card must not show the same label twice (for example City twice) */
+  const dedupeCardCells = (root) => {
+    (root || document).querySelectorAll(".card-data-grid").forEach((grid) => {
+      const seen = new Set();
+      grid.querySelectorAll(".data-cell").forEach((cell) => {
+        const label = (cell.querySelector(".data-label")?.textContent || "")
+          .trim()
+          .toLowerCase();
+        if (!label) return;
+        if (seen.has(label)) cell.remove();
+        else seen.add(label);
+      });
+      const cells = grid.querySelectorAll(".data-cell");
+      if (cells.length % 2 === 1) cells[cells.length - 1].classList.add("full-width");
+    });
+  };
+
+  const baseRender = FamilyApp.renderDirectory;
+  FamilyApp.renderDirectory = function () {
+    const out = typeof baseRender === "function" ? baseRender.apply(this, arguments) : undefined;
+    dedupeCardCells(document.getElementById("directoryGrid"));
+    return out;
+  };
+
+  /* The edit form must show the person's saved value even when it is not in
+     the option list (otherwise Family Label / City look empty) */
+  const ensureOption = (selectId, wanted) => {
+    const select = document.getElementById(selectId);
+    if (!select || !wanted) return;
+    const text = String(wanted).trim();
+    if (!text) return;
+    if (select.value && select.value !== "") return;
+
+    const options = Array.from(select.options);
+    const exact = options.find((o) => o.value === text);
+    const partial = options.find(
+      (o) => o.value && (text.startsWith(o.value + ",") || text.split(",")[0].trim() === o.value)
+    );
+    const match = exact || partial;
+    if (match) {
+      select.value = match.value;
+      return;
+    }
+    const extra = new Option(text, text);
+    select.add(extra);
+    select.value = text;
+  };
+
+  const baseOpenEdit = FamilyApp.openEditModal;
+  FamilyApp.openEditModal = function (id) {
+    const out = typeof baseOpenEdit === "function" ? baseOpenEdit.apply(this, arguments) : undefined;
+    const fill = () => {
+      try {
+        const person = this.getPerson ? this.getPerson(id) : null;
+        if (!person) return;
+        ensureOption("editFamilyLabel", person.familyLabel);
+        ensureOption("editCity", person.city);
+      } catch (_) { /* leave the form as it is */ }
+    };
+    fill();
+    Promise.resolve(out).then(fill);
+    return out;
+  };
+})();
+</script>
+<script>
+/* Duplicate values: never show the same text twice in one place.
+   - nickname identical to the name (Paklong / Paklong) is hidden
+   - "(8 years old)" inside a bio is removed because the age is already shown
+   Runs on every render (cards, table, By Family, profile, tree) via an observer. */
+(function () {
+  var norm = function (s) { return String(s || "").replace(/[“”"']/g, "").replace(/\s+/g, " ").trim().toLowerCase(); };
+  var firstText = function (el) {
+    for (var n = el.firstChild; n; n = n.nextSibling) if (n.nodeType === 3 && n.textContent.trim()) return n.textContent;
+    return el.textContent;
+  };
+  function hideIfSame(scope, nameSel, nickSel, getName) {
+    scope.querySelectorAll(nameSel).forEach(function (nameEl) {
+      var box = nameEl.parentElement && (nameEl.closest(".card-profile-info, .dt-member, .profile-hero, #modalPersonBody") || nameEl.parentElement);
+      if (!box) return;
+      var nick = box.querySelector(nickSel);
+      if (!nick || nick.dataset.dd === "1") return;
+      if (norm(getName(nameEl)) === norm(nick.textContent)) {
+        nick.dataset.dd = "1";
+        nick.style.display = "none";
+        var bullet = nick.nextElementSibling;
+        if (bullet && bullet.classList.contains("profile-bullet")) bullet.style.display = "none";
+      }
+    });
+  }
+  function run(root) {
+    var s = root || document;
+    hideIfSame(s, ".card-name-title", ".meta-tag.nickname", function (e) { return e.textContent; });
+    hideIfSame(s, ".dt-name", ".dt-nick", firstText);
+    hideIfSame(s, ".profile-hero-name", ".profile-nickname", function (e) { return e.textContent; });
+    s.querySelectorAll(".card-bio-snippet, .dt-bio, [class*='profile-bio']").forEach(function (b) {
+      if (b.dataset.dd === "1") return;
+      var re = /\s*\(\s*\d+\s*years?\s*old\s*\)/i;
+      if (re.test(b.textContent)) {
+        b.textContent = b.textContent.replace(re, "");
+        b.title = (b.title || "").replace(re, "");
+      }
+      b.dataset.dd = "1";
+    });
+  }
+  var queued = false;
+  function schedule() {
+    if (queued) return;
+    queued = true;
+    requestAnimationFrame(function () { queued = false; run(); });
+  }
+  function start() {
+    run();
+    new MutationObserver(schedule).observe(document.body, { childList: true, subtree: true });
+  }
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", start);
+  else start();
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,15 @@
+# Cloudflare Pages headers
+# Keeps this private family site out of search engines and embeds.
+
+/*
+  X-Robots-Tag: noindex, nofollow, noarchive
+  Referrer-Policy: strict-origin-when-cross-origin
+  X-Content-Type-Options: nosniff
+  X-Frame-Options: DENY
+  Permissions-Policy: geolocation=(), microphone=(), camera=()
+
+/public/js/*
+  Cache-Control: no-cache
+
+/public/data/*
+  Cache-Control: no-cache

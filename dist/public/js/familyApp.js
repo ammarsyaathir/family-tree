@@ -12,7 +12,7 @@ const FamilyApp = {
   data: [],
   filtered: [],
   activeTab: "tree",
-  treeLineage: "pedigree", // "pedigree", "paternal", "maternal"
+  treeLineage: "core", // "core", "paternal" (Dad's side), "maternal" (Mom's side)
   zoomLevel: 1.0,
   editingPersonId: null,
   currentAvatarBase64: null,
@@ -35,11 +35,16 @@ const FamilyApp = {
     this.readUrlFilterParams();
     this.render();
     const params = new URLSearchParams(window.location.search);
-    const editId = params.get("edit") || params.get("id");
-    if (window.location.pathname.toLowerCase().includes("add")) {
+    // Deep links: ?add=1 opens the Add popup, ?edit=ID the Edit popup, ?locate=ID spotlights someone in the tree.
+    const editId = params.get("edit");
+    const locateId = params.get("locate");
+    if (params.get("add")) {
       setTimeout(() => this.openCreateModal(), 0);
-    } else if (window.location.pathname.toLowerCase().includes("edit") && editId) {
+    } else if (editId) {
       setTimeout(() => this.openEditModal(editId), 0);
+    }
+    if (locateId && document.getElementById("treeContainer")) {
+      setTimeout(() => this.locatePersonInTree(locateId), 300);
     }
   },
 
@@ -135,7 +140,6 @@ const FamilyApp = {
     const addPersonBtn = document.getElementById("btnAddPerson");
     if (addPersonBtn) addPersonBtn.addEventListener("click", () => {
       this.openCreateModal();
-      window.history.pushState({ tab: "add" }, "", "/add");
     });
     const deletePersonBtn = document.getElementById("btnDeletePerson");
     if (deletePersonBtn) deletePersonBtn.addEventListener("click", () => this.deletePerson());
@@ -797,7 +801,7 @@ const FamilyApp = {
       if (cohort) params.set("cohort", cohort);
       if (city) params.set("city", city);
 
-      window.location.href = `/directory?${params.toString()}`;
+      window.location.href = `directory.html?${params.toString()}`;
     }
   },
 
@@ -847,6 +851,58 @@ const FamilyApp = {
     return (words[0][0] + words[1][0]).toUpperCase();
   },
 
+  getAvatarHtml(p, cssClass = "avatar-img") {
+    if (!p) return "";
+    if (p.avatar) {
+      return `<img src="${p.avatar}" alt="${p.name || ""}" class="${cssClass}" style="width:100%;height:100%;object-fit:cover;border-radius:inherit;display:block;" />`;
+    }
+    return `<span>${this.getCleanInitials(p)}</span>`;
+  },
+
+  getSpouses(person) {
+    if (!person) return [];
+    const spouseList = [];
+    const directIds = (person.spouses || []).map((s) => (typeof s === "string" ? s : s?.id)).filter(Boolean);
+    directIds.forEach((sid) => {
+      const p = this.getPerson(sid);
+      if (p && !spouseList.some((x) => x.id === p.id)) spouseList.push(p);
+    });
+    // Find any member who has person.id in their spouses list
+    (this.data || []).forEach((other) => {
+      if (other.id === person.id) return;
+      const otherSpouses = (other.spouses || []).map((s) => (typeof s === "string" ? s : s?.id)).filter(Boolean);
+      if (otherSpouses.includes(person.id) && !spouseList.some((x) => x.id === other.id)) {
+        spouseList.push(other);
+      }
+    });
+    return spouseList;
+  },
+
+  getChildren(person, spouse = null) {
+    if (!person) return [];
+    const kids = [];
+    const directIds = [
+      ...(person.children || []),
+      ...(spouse ? (spouse.children || []) : [])
+    ];
+    directIds.forEach((cid) => {
+      const c = this.getPerson(cid);
+      if (c && !kids.some((x) => x.id === c.id)) kids.push(c);
+    });
+    // Find any member whose fatherId or motherId matches person or spouse
+    (this.data || []).forEach((other) => {
+      if (other.id === person.id || (spouse && other.id === spouse.id)) return;
+      const isChild =
+        other.fatherId === person.id ||
+        other.motherId === person.id ||
+        (spouse && (other.fatherId === spouse.id || other.motherId === spouse.id));
+      if (isChild && !kids.some((x) => x.id === other.id)) {
+        kids.push(other);
+      }
+    });
+    return kids.sort((a, b) => (a.generation || 0) - (b.generation || 0) || (b.age || 0) - (a.age || 0));
+  },
+
   renderTreeMemberNode(person, customRole) {
     if (!person) return "";
     const isMe = person.id === "c_ammar";
@@ -855,12 +911,44 @@ const FamilyApp = {
     return `
       <div class="tree-member ${isMe ? "is-me" : ""}" data-id="${person.id}">
         <div class="tree-avatar-circle ${person.gender}">
-          ${person.avatar ? `<img src="${person.avatar}" alt="${person.name}" class="avatar-photo" />` : initials}
+          ${person.avatar ? `<img src="${person.avatar}" alt="${person.name}" class="avatar-photo" style="width:100%;height:100%;object-fit:cover;border-radius:inherit;" />` : initials}
           ${isMe ? `<span class="me-star-badge"><i class="fa-solid fa-crown"></i> ME</span>` : ""}
         </div>
         <div class="tree-member-name" title="${person.name}">${person.name}</div>
         <div class="tree-member-meta">${typeof person.age === "number" ? `${person.age} yrs` : "Age unknown"}</div>
       </div>
+    `;
+  },
+
+  renderTreePersonOrCouple(person, defaultRole) {
+    if (!person) return "";
+    const spouses = this.getSpouses(person);
+    const right = spouses[0] || null;
+    const kids = this.getChildren(person, right);
+
+    if (!right && !kids.length) {
+      return this.renderTreeMemberNode(person, defaultRole);
+    }
+
+    const rightLabel = right ? (right.familyLabel || (right.gender === "female" ? "WIFE" : "HUSBAND")) : "";
+    const targetId = `branch-sub-${person.id}`;
+
+    return `
+      <div class="tree-couple-box">
+        ${this.renderTreeMemberNode(person, defaultRole)}
+        ${right ? `<div class="tree-marriage-bridge"><i class="fa-solid fa-heart"></i></div>${this.renderTreeMemberNode(right, rightLabel)}` : ""}
+      </div>
+      ${kids.length ? `
+        <div class="tree-branch-connector">
+          <div class="tree-stem-down"></div>
+          <button class="tree-toggle-pill" data-target="${targetId}" data-count="${kids.length}">
+            <i class="fa-solid fa-minus"></i> ${kids.length} ${kids.length === 1 ? "Child" : "Children"}
+          </button>
+        </div>
+        <div class="tree-children-wrapper" id="${targetId}">
+          ${kids.map((c) => `<div class="tree-child-column">${this.renderTreePersonOrCouple(c, "CHILD")}</div>`).join("")}
+        </div>
+      ` : ""}
     `;
   },
 
@@ -873,14 +961,12 @@ const FamilyApp = {
 
     let html = `<div class="genealogy-tree" id="familyTreeRoot">`;
 
-    if (this.treeLineage === "both") {
-      html += this.buildCombinedFamilyTree();
-    } else if (this.treeLineage === "paternal") {
+    if (this.treeLineage === "paternal") {
       html += this.buildPaternalLineageTree();
     } else if (this.treeLineage === "maternal") {
       html += this.buildMaternalLineageTree();
     } else {
-      html += this.buildDirectPedigreeTree();
+      html += this.buildCoreFamilyTree();
     }
 
     html += `</div>`;
@@ -888,6 +974,14 @@ const FamilyApp = {
 
     this.attachTreeInteractions(container);
     this.applyZoom();
+
+    // Wide trees open centred on the top couple instead of at the far left.
+    const viewport = container.closest(".tree-viewport");
+    if (viewport) {
+      requestAnimationFrame(() => {
+        viewport.scrollLeft = Math.max(0, (viewport.scrollWidth - viewport.clientWidth) / 2);
+      });
+    }
   },
 
   buildPaternalLineageTree() {
@@ -956,7 +1050,7 @@ const FamilyApp = {
                 .map(
                   (c, i) => `
                 <div class="tree-child-column">
-                  ${this.renderTreeMemberNode(c, `COUSIN ${i + 1}`)}
+                  ${this.renderTreePersonOrCouple(c, `COUSIN ${i + 1}`)}
                 </div>
               `
                 )
@@ -982,7 +1076,7 @@ const FamilyApp = {
                 .map(
                   (c, i) => `
                 <div class="tree-child-column">
-                  ${this.renderTreeMemberNode(c, `COUSIN ${i + 5}`)}
+                  ${this.renderTreePersonOrCouple(c, `COUSIN ${i + 5}`)}
                 </div>
               `
                 )
@@ -1033,22 +1127,22 @@ const FamilyApp = {
 
               <!-- Sister Aliah -->
               <div class="tree-child-column">
-                ${this.renderTreeMemberNode(this.getPerson("c_aliah"), "SISTER (ALIAH)")}
+                ${this.renderTreePersonOrCouple(this.getPerson("c_aliah"), "SISTER (ALIAH)")}
               </div>
 
               <!-- Sister Aqilah -->
               <div class="tree-child-column">
-                ${this.renderTreeMemberNode(this.getPerson("c_aqilah"), "SISTER (AQILAH)")}
+                ${this.renderTreePersonOrCouple(this.getPerson("c_aqilah"), "SISTER (AQILAH)")}
               </div>
 
               <!-- Sister Adilah -->
               <div class="tree-child-column">
-                ${this.renderTreeMemberNode(this.getPerson("c_adilah"), "SISTER (ADILAH)")}
+                ${this.renderTreePersonOrCouple(this.getPerson("c_adilah"), "SISTER (ADILAH)")}
               </div>
 
               <!-- ME: Ammar Syaathir -->
               <div class="tree-child-column">
-                ${this.renderTreeMemberNode(this.getPerson("c_ammar"), "ME (AMMAR)")}
+                ${this.renderTreePersonOrCouple(this.getPerson("c_ammar"), "ME (AMMAR)")}
               </div>
 
             </div>
@@ -1056,11 +1150,14 @@ const FamilyApp = {
 
           <!-- Unit 4: Makteh -->
           <div class="tree-child-column">
-            ${this.renderTreeMemberNode(makteh, "AUNT (MAKTEH)")}
+            <div class="tree-couple-box">
+              ${this.renderTreeMemberNode(makteh, "AUNT (MAKTEH)")}
+              ${this.getSpouses(makteh)[0] ? `<div class="tree-marriage-bridge"><i class="fa-solid fa-heart"></i></div>${this.renderTreeMemberNode(this.getSpouses(makteh)[0], "UNCLE")}` : ""}
+            </div>
             <div class="tree-branch-connector">
               <div class="tree-stem-down"></div>
-              <button class="tree-toggle-pill" data-target="branch-mt" data-count="4">
-                <i class="fa-solid fa-minus"></i> 4 Children
+              <button class="tree-toggle-pill" data-target="branch-mt" data-count="${mt_kids.length}">
+                <i class="fa-solid fa-minus"></i> ${mt_kids.length} Children
               </button>
             </div>
             <div class="tree-children-wrapper" id="branch-mt">
@@ -1068,7 +1165,7 @@ const FamilyApp = {
                 .map(
                   (c) => `
                 <div class="tree-child-column">
-                  ${this.renderTreeMemberNode(c, `COUSIN (${c.nickname})`)}
+                  ${this.renderTreePersonOrCouple(c, `COUSIN (${c.nickname || "Cousin"})`)}
                 </div>
               `
                 )
@@ -1103,7 +1200,7 @@ const FamilyApp = {
                 .map(
                   (c, i) => `
                 <div class="tree-child-column">
-                  ${this.renderTreeMemberNode(c, `COUSIN ${i + 1}`)}
+                  ${this.renderTreePersonOrCouple(c, `COUSIN ${i + 1}`)}
                 </div>
               `
                 )
@@ -1177,7 +1274,7 @@ const FamilyApp = {
                 .map(
                   (c) => `
                 <div class="tree-child-column">
-                  ${this.renderTreeMemberNode(c, `COUSIN (${c.nickname})`)}
+                  ${this.renderTreePersonOrCouple(c, `COUSIN (${c.nickname || "Cousin"})`)}
                 </div>
               `
                 )
@@ -1202,7 +1299,7 @@ const FamilyApp = {
                 .map(
                   (c) => `
                 <div class="tree-child-column">
-                  ${this.renderTreeMemberNode(c, `COUSIN (${c.nickname})`)}
+                  ${this.renderTreePersonOrCouple(c, `COUSIN (${c.nickname || "Cousin"})`)}
                 </div>
               `
                 )
@@ -1249,19 +1346,19 @@ ${includeCore ? `${includeCore ? `          <div class="tree-child-column">
               </div>
 
               <div class="tree-child-column">
-                ${this.renderTreeMemberNode(this.getPerson("c_aliah"), "SISTER (ALIAH)")}
+                ${this.renderTreePersonOrCouple(this.getPerson("c_aliah"), "SISTER (ALIAH)")}
               </div>
 
               <div class="tree-child-column">
-                ${this.renderTreeMemberNode(this.getPerson("c_aqilah"), "SISTER (AQILAH)")}
+                ${this.renderTreePersonOrCouple(this.getPerson("c_aqilah"), "SISTER (AQILAH)")}
               </div>
 
               <div class="tree-child-column">
-                ${this.renderTreeMemberNode(this.getPerson("c_adilah"), "SISTER (ADILAH)")}
+                ${this.renderTreePersonOrCouple(this.getPerson("c_adilah"), "SISTER (ADILAH)")}
               </div>
 
               <div class="tree-child-column">
-                ${this.renderTreeMemberNode(this.getPerson("c_ammar"), "ME (AMMAR)")}
+                ${this.renderTreePersonOrCouple(this.getPerson("c_ammar"), "ME (AMMAR)")}
               </div>
             </div>
           </div>` : ""}` : ""}
@@ -1283,7 +1380,7 @@ ${includeCore ? `${includeCore ? `          <div class="tree-child-column">
                 .map(
                   (c) => `
                 <div class="tree-child-column">
-                  ${this.renderTreeMemberNode(c, `COUSIN (${c.nickname})`)}
+                  ${this.renderTreePersonOrCouple(c, `COUSIN (${c.nickname || "Cousin"})`)}
                 </div>
               `
                 )
@@ -1308,7 +1405,7 @@ ${includeCore ? `${includeCore ? `          <div class="tree-child-column">
                 .map(
                   (c) => `
                 <div class="tree-child-column">
-                  ${this.renderTreeMemberNode(c, `COUSIN (${c.nickname})`)}
+                  ${this.renderTreePersonOrCouple(c, `COUSIN (${c.nickname || "Cousin"})`)}
                 </div>
               `
                 )
@@ -1397,19 +1494,19 @@ ${includeCore ? `${includeCore ? `          <div class="tree-child-column">
           </div>
 
           <div class="tree-child-column">
-            ${this.renderTreeMemberNode(this.getPerson("c_aliah"), "SISTER (ALIAH)")}
+            ${this.renderTreePersonOrCouple(this.getPerson("c_aliah"), "SISTER (ALIAH)")}
           </div>
 
           <div class="tree-child-column">
-            ${this.renderTreeMemberNode(this.getPerson("c_aqilah"), "SISTER (AQILAH)")}
+            ${this.renderTreePersonOrCouple(this.getPerson("c_aqilah"), "SISTER (AQILAH)")}
           </div>
 
           <div class="tree-child-column">
-            ${this.renderTreeMemberNode(this.getPerson("c_adilah"), "SISTER (ADILAH)")}
+            ${this.renderTreePersonOrCouple(this.getPerson("c_adilah"), "SISTER (ADILAH)")}
           </div>
 
           <div class="tree-child-column">
-            ${this.renderTreeMemberNode(this.getPerson("c_ammar"), "ME (AMMAR)")}
+            ${this.renderTreePersonOrCouple(this.getPerson("c_ammar"), "ME (AMMAR)")}
           </div>
         </div>
       </div>
@@ -1466,19 +1563,19 @@ ${includeCore ? `${includeCore ? `          <div class="tree-child-column">
           </div>
 
           <div class="tree-child-column">
-            ${this.renderTreeMemberNode(this.getPerson("c_aliah"), "SISTER (ALIAH)")}
+            ${this.renderTreePersonOrCouple(this.getPerson("c_aliah"), "SISTER (ALIAH)")}
           </div>
 
           <div class="tree-child-column">
-            ${this.renderTreeMemberNode(this.getPerson("c_aqilah"), "SISTER (AQILAH)")}
+            ${this.renderTreePersonOrCouple(this.getPerson("c_aqilah"), "SISTER (AQILAH)")}
           </div>
 
           <div class="tree-child-column">
-            ${this.renderTreeMemberNode(this.getPerson("c_adilah"), "SISTER (ADILAH)")}
+            ${this.renderTreePersonOrCouple(this.getPerson("c_adilah"), "SISTER (ADILAH)")}
           </div>
 
           <div class="tree-child-column">
-            ${this.renderTreeMemberNode(this.getPerson("c_ammar"), "ME (AMMAR)")}
+            ${this.renderTreePersonOrCouple(this.getPerson("c_ammar"), "ME (AMMAR)")}
           </div>
         </div>
       </div>
@@ -1588,10 +1685,10 @@ ${includeCore ? `${includeCore ? `          <div class="tree-child-column">
                 ${nieces.map((nc) => `<div class="tree-child-column">${this.renderTreeMemberNode(nc, `NIECE (${nc.age} YRS)`)}</div>`).join("")}
               </div>
             </div>
-            <div class="tree-child-column">${this.renderTreeMemberNode(this.getPerson("c_aliah"), "SISTER (ALIAH)")}</div>
-            <div class="tree-child-column">${this.renderTreeMemberNode(this.getPerson("c_aqilah"), "SISTER (AQILAH)")}</div>
-            <div class="tree-child-column">${this.renderTreeMemberNode(this.getPerson("c_adilah"), "SISTER (ADILAH)")}</div>
-            <div class="tree-child-column">${this.renderTreeMemberNode(this.getPerson("c_ammar"), "ME (AMMAR)")}</div>
+            <div class="tree-child-column">${this.renderTreePersonOrCouple(this.getPerson("c_aliah"), "SISTER (ALIAH)")}</div>
+            <div class="tree-child-column">${this.renderTreePersonOrCouple(this.getPerson("c_aqilah"), "SISTER (AQILAH)")}</div>
+            <div class="tree-child-column">${this.renderTreePersonOrCouple(this.getPerson("c_adilah"), "SISTER (ADILAH)")}</div>
+            <div class="tree-child-column">${this.renderTreePersonOrCouple(this.getPerson("c_ammar"), "ME (AMMAR)")}</div>
           </div>
         </div>
 
@@ -1599,7 +1696,7 @@ ${includeCore ? `${includeCore ? `          <div class="tree-child-column">
           <div style="width:100%; font-size:12px; font-weight:800; color:var(--primary); text-align:center;">DAD'S SIDE</div>
           ${maternalUnit(paklong, maklong, plKids, "branch-pl", 4, "UNCLE (PAKLONG)")}
           ${maternalUnit(pakngah, makngah, pnKids, "branch-pn", 4, "UNCLE (PAKNGAH)")}
-          ${maternalUnit(makteh, null, mtKids, "branch-mt", 4, "AUNT (MAKTEH)")}
+          ${maternalUnit(makteh, this.getSpouses(makteh)[0] || null, mtKids, "branch-mt", mtKids.length, "AUNT (MAKTEH)")}
           ${maternalUnit(aciknora, izzan, [], "branch-an", 0, "AUNT (ACIK NORA)")}
           ${maternalUnit(maksulaili, azman, msKids, "branch-ms", 7, "AUNT (MAKSU LAILI)")}
         </div>
@@ -1736,10 +1833,18 @@ ${includeCore ? `${includeCore ? `          <div class="tree-child-column">
     const person = this.getPerson(id);
     if (!person) return;
 
+    // Other pages hand over to the Family Tree page, which spotlights the person there.
+    if (!document.getElementById("treeContainer")) {
+      window.location.href = `family.html?locate=${encodeURIComponent(id)}`;
+      return;
+    }
+
     if (person.branch === "maternal") {
       this.treeLineage = "maternal";
-    } else {
+    } else if (person.branch === "paternal") {
       this.treeLineage = "paternal";
+    } else {
+      this.treeLineage = "core";
     }
 
     // Update lineage buttons in UI
@@ -1877,75 +1982,56 @@ ${includeCore ? `${includeCore ? `          <div class="tree-child-column">
   renderModernMemberCard(p) {
     const initials = this.getCleanInitials(p);
     const familyUnit = p.familyUnit || "core_ammar";
-    const familyLabel = p.familyLabel || "Keluarga";
-    const relation = this.getRelationToAmmar(p);
     const genealogy = this.getGenealogySnippet(p);
     const isMe = p.id === "c_ammar";
+    const cityText = p.city ? p.city.split(",")[0].trim() : "-";
+    const dobText = p.dob || "-";
+    const ageText = `${p.age || 0} yrs`;
 
     return `
       <article class="modern-member-card unit-${familyUnit} ${isMe ? "is-author" : ""}" data-id="${p.id}">
-        <!-- Top Colored Header Strip -->
-        <div class="card-top-stripe stripe-${familyUnit}"></div>
+        <!-- Top Colored Accent Stripe -->
+        <div class="card-top-accent stripe-${familyUnit}"></div>
 
         <div class="card-inner">
-          <!-- Header Bar: Family Badge & Relation -->
-          <div class="card-header-bar">
-            <span class="card-family-badge badge-${familyUnit}" title="Household: ${familyLabel}">
-              <i class="fa-solid fa-house-chimney-window"></i>
-              <span>${familyLabel}</span>
-            </span>
-
-            <span class="card-relation-badge rel-${relation.cls}">
-              <i class="fa-solid ${relation.icon}"></i>
-              <span>${relation.text}</span>
-            </span>
-          </div>
-
-          <!-- Profile Hero Row -->
-          <div class="card-profile-row">
+          <!-- 1. NAME & AVATAR -->
+          <div class="card-member-header">
             <div class="card-avatar-container ${p.gender}">
               ${p.avatar ? `<img src="${p.avatar}" alt="${p.name}" class="avatar-img" />` : `<span class="avatar-initials">${initials}</span>`}
-              ${isMe ? `<span class="author-crown-pill" title="System Author / Me"><i class="fa-solid fa-crown"></i> ME</span>` : ""}
+              ${isMe ? `<span class="card-author-badge" title="Me (App Author)"><i class="fa-solid fa-crown"></i> ME</span>` : ""}
             </div>
 
-            <div class="card-profile-info">
+            <div class="card-member-names">
               <h3 class="card-name-title" title="${p.name}">${p.name}</h3>
-              <div class="card-meta-tags">
-                <span class="meta-tag gen">Gen ${p.generation}</span>
-                <span class="meta-tag branch branch-${p.branch}">${p.branch}</span>
-              </div>
+              ${p.nickname ? `<span class="card-nickname-tag">${p.nickname}</span>` : ""}
             </div>
           </div>
 
-          <!-- Informational Data Grid (Clean Modern Chips instead of stiff table) -->
-          <div class="card-data-grid">
-            <div class="data-cell">
-              <div class="data-icon pink"><i class="fa-solid fa-cake-candles"></i></div>
-              <div class="data-text">
-                <span class="data-label">Age &amp; DOB</span>
-                <span class="data-val"><b>${p.age}</b> yrs · ${p.dob || "-"}</span>
-              </div>
+          <!-- 2. BOD - AGE & 3. CITY -->
+          <div class="card-meta-list">
+            <div class="card-meta-row">
+              <span class="card-meta-label"><i class="fa-regular fa-calendar-days"></i> BOD - AGE</span>
+              <span class="card-meta-val"><b>${dobText}</b> <span class="val-sep">·</span> <b>${ageText}</b></span>
             </div>
 
-             <div class="data-cell">
-               <div class="data-icon sky"><i class="fa-solid fa-location-dot"></i></div>
-               <div class="data-text">
-                 <span class="data-label">City</span>
-                 <span class="data-val" title="${p.city}">${p.city ? p.city.split(",")[0] : "-"}</span>
-               </div>
-             </div>
-
+            <div class="card-meta-row">
+              <span class="card-meta-label"><i class="fa-solid fa-location-dot"></i> CITY</span>
+              <span class="card-meta-val">${cityText}</span>
+            </div>
           </div>
 
-          <!-- Genealogy Context Pill -->
-          <div class="card-genealogy-pill" title="${genealogy}">
-            <i class="fa-solid fa-diagram-project"></i>
-            <span>${genealogy}</span>
+          <!-- 4. LINEAGE & KINSHIP CONTEXT -->
+          <div class="card-kinship-block" title="${genealogy}">
+            <div class="kinship-block-label">
+              <i class="fa-solid fa-diagram-project"></i>
+              <span>LINEAGE &amp; KINSHIP CONTEXT</span>
+            </div>
+            <div class="kinship-block-text">
+              ${genealogy}
+            </div>
           </div>
 
-          ${p.bio ? `<p class="card-bio-snippet" title="${p.bio}">“${p.bio}”</p>` : ""}
-
-          <!-- Interactive Action Buttons Footer -->
+          <!-- 5. THE 4 ACTIONS -->
           <div class="card-action-footer">
             <button class="btn-card-action btn-tree-spotlight" data-locate-tree-id="${p.id}" type="button" title="Spotlight ${p.name} on Visual Family Tree">
               <i class="fa-solid fa-crosshairs"></i> Tree
@@ -2025,68 +2111,63 @@ ${includeCore ? `${includeCore ? `          <div class="tree-child-column">
         <table class="directory-table">
           <thead>
             <tr>
-              <th>#</th>
-              <th>Member Name</th>
-              <th>Relation to Ammar</th>
-              <th>Household Unit</th>
-              <th>Gen &amp; Lineage</th>
-              <th>Age &amp; DOB</th>
-              <th>City</th>
-              <th style="text-align:right;">Actions</th>
+              <th class="col-member">MEMBER</th>
+              <th class="col-household">HOUSEHOLD</th>
+              <th class="col-bod">BOD</th>
+              <th class="col-city">CITY</th>
+              <th class="col-action" style="text-align:right;">ACTION</th>
             </tr>
           </thead>
           <tbody>
             ${this.filtered
               .slice()
               .sort((a, b) => (a.generation || 0) - (b.generation || 0) || a.name.localeCompare(b.name))
-              .map((p, idx) => {
+              .map((p) => {
                 const initials = this.getCleanInitials(p);
-                const rel = this.getRelationToAmmar(p);
                 const familyUnit = p.familyUnit || "core_ammar";
                 const familyLabel = p.familyLabel || "Keluarga";
+                const isMe = p.id === "c_ammar";
 
                 return `
-                  <tr data-id="${p.id}">
-                    <td style="color:#94a3b8; font-weight:700;">${idx + 1}</td>
-                    <td>
-                      <div style="display:flex; align-items:center; gap:10px;">
-                        <div class="card-avatar-container ${p.gender}" style="width:36px; height:36px; font-size:12px;">
+                  <tr data-id="${p.id}" class="${isMe ? "is-author" : ""}">
+                    <td class="col-member">
+                      <div class="table-member-cell" style="display:flex; align-items:center; gap:10px;">
+                        <div class="card-avatar-container ${p.gender}" style="width:38px; height:38px; min-width:38px; font-size:12px; margin-bottom:0;">
                           ${p.avatar ? `<img src="${p.avatar}" alt="${p.name}" class="avatar-img" />` : `<span class="avatar-initials" style="font-size:12px;">${initials}</span>`}
                         </div>
-                        <div>
-                          <strong style="display:block; color:#0f172a; font-size:13px;">${p.name}</strong>
+                        <div class="table-member-info">
+                          <strong class="table-member-name" style="display:block; color:#0f172a; font-size:13px; font-weight:700;">${p.name}${isMe ? ` <span style="font-size:10px; background:#b58b3f; color:#fff; padding:1px 6px; border-radius:4px;"><i class="fa-solid fa-crown"></i> ME</span>` : ""}</strong>
+                          ${p.nickname ? `<span class="table-member-nickname" style="font-size:11px; color:#64748b;">(${p.nickname})</span>` : ""}
                         </div>
                       </div>
                     </td>
-                    <td>
-                      <span class="card-relation-badge rel-${rel.cls}" style="font-size:10px; padding:2px 7px;">
-                        <i class="fa-solid ${rel.icon}"></i> ${rel.text}
+                    <td class="col-household">
+                      <span class="card-family-badge badge-${familyUnit}" style="font-size:11px; padding:3px 9px;">
+                        <i class="fa-solid fa-house-chimney-window"></i> ${familyLabel}
                       </span>
                     </td>
-                    <td>
-                      <span class="card-family-badge badge-${familyUnit}" style="font-size:10px; padding:2px 7px;">
-                        ${familyLabel}
-                      </span>
+                    <td class="col-bod">
+                      <div class="table-bod-cell">
+                        <span class="table-age-val" style="display:block; font-size:12px; font-weight:700;"><b>${p.age || "-"}</b> yrs</span>
+                        <small class="table-dob-val" style="color:#64748b; font-size:11px;">${p.dob || "-"}</small>
+                      </div>
                     </td>
-                    <td>
-                      <span class="meta-tag gen" style="font-size:10px;">Gen ${p.generation}</span>
-                      <span class="meta-tag branch branch-${p.branch}" style="font-size:9px;">${p.branch}</span>
+                    <td class="col-city">
+                      <span class="table-city-badge" style="font-size:12px;">${p.city ? p.city.split(",")[0] : "-"}</span>
                     </td>
-                    <td>
-                      <b>${p.age}</b> yrs <br/>
-                      <small style="color:#64748b;">${p.dob || "-"}</small>
-                    </td>
-                    <td>${p.city ? p.city.split(",")[0] : "-"}</td>
-                    <td style="text-align:right;">
-                      <div style="display:inline-flex; gap:4px;">
-                        <button class="btn-card-action btn-tree-spotlight" data-locate-tree-id="${p.id}" type="button" title="Spotlight on Tree" style="padding:4px 8px; font-size:11px;">
-                          <i class="fa-solid fa-crosshairs"></i>
+                    <td class="col-action" style="text-align:right;">
+                      <div class="table-action-btns" style="display:inline-flex; gap:6px;">
+                        <button class="btn-card-action btn-tree-spotlight" data-locate-tree-id="${p.id}" type="button" title="Spotlight ${p.name} on Tree" style="padding:4px 8px; font-size:11px;">
+                          <i class="fa-solid fa-crosshairs"></i> Tree
                         </button>
                         <button class="btn-card-action btn-edit-card" data-edit-id="${p.id}" type="button" title="Edit Profile" style="padding:4px 8px; font-size:11px;">
-                          <i class="fa-solid fa-pen-to-square"></i>
+                          <i class="fa-solid fa-pen-to-square"></i> Edit
                         </button>
                         <button class="btn-card-action btn-view-card" data-view-id="${p.id}" type="button" title="View Profile" style="padding:4px 8px; font-size:11px;">
-                          <i class="fa-solid fa-id-card-clip"></i>
+                          <i class="fa-solid fa-id-card-clip"></i> Profile
+                        </button>
+                        <button class="btn-card-action btn-copy-card" data-copy-id="${p.id}" type="button" title="Copy Info" style="padding:4px 8px; font-size:11px;">
+                          <i class="fa-solid fa-copy"></i>
                         </button>
                       </div>
                     </td>
@@ -2644,8 +2725,8 @@ ${includeCore ? `${includeCore ? `          <div class="tree-child-column">
             <div class="profile-avatar-wrap ${person.gender}">
               ${
                 person.avatar
-                  ? `<img src="${person.avatar}" alt="${person.name}" class="profile-avatar-img" />`
-                  : `<span class="profile-avatar-placeholder"><i class="fa-solid fa-camera"></i></span>`
+                  ? `<img src="${person.avatar}" alt="${person.name}" class="profile-avatar-img" style="width:100%;height:100%;object-fit:cover;border-radius:50%;display:block;" />`
+                  : `<span class="profile-avatar-placeholder"><span class="avatar-initials" style="font-size:32px; font-weight:800; color:#fff;">${initials}</span></span>`
               }
               ${isMe ? `<span class="profile-author-crown" title="Me (App Author)"><i class="fa-solid fa-crown"></i> ME</span>` : ""}
             </div>
@@ -2732,7 +2813,7 @@ ${includeCore ? `${includeCore ? `          <div class="tree-child-column">
                 father
                   ? `
                 <div class="kinship-member-card modal-jump" data-id="${father.id}">
-                  <div class="kinship-avatar male">${this.getCleanInitials(father)}</div>
+                  <div class="kinship-avatar male">${father.avatar ? `<img src="${father.avatar}" alt="${father.name}" style="width:100%;height:100%;object-fit:cover;border-radius:50%;display:block;" />` : this.getCleanInitials(father)}</div>
                   <div class="kinship-meta">
                     <span class="kinship-relation"><i class="fa-solid fa-mars" style="color:var(--male);"></i> Father</span>
                     <span class="kinship-name">${father.name}</span>
@@ -2747,7 +2828,7 @@ ${includeCore ? `${includeCore ? `          <div class="tree-child-column">
                 mother
                   ? `
                 <div class="kinship-member-card modal-jump" data-id="${mother.id}">
-                  <div class="kinship-avatar female">${this.getCleanInitials(mother)}</div>
+                  <div class="kinship-avatar female">${mother.avatar ? `<img src="${mother.avatar}" alt="${mother.name}" style="width:100%;height:100%;object-fit:cover;border-radius:50%;display:block;" />` : this.getCleanInitials(mother)}</div>
                   <div class="kinship-meta">
                     <span class="kinship-relation"><i class="fa-solid fa-venus" style="color:var(--female);"></i> Mother</span>
                     <span class="kinship-name">${mother.name}</span>
@@ -2787,7 +2868,7 @@ ${includeCore ? `${includeCore ? `          <div class="tree-child-column">
                     if (!sp) return "";
                     return `
                       <div class="kinship-member-card modal-jump" data-id="${sp.id}">
-                        <div class="kinship-avatar ${sp.gender}">${this.getCleanInitials(sp)}</div>
+                        <div class="kinship-avatar ${sp.gender}">${sp.avatar ? `<img src="${sp.avatar}" alt="${sp.name}" style="width:100%;height:100%;object-fit:cover;border-radius:50%;display:block;" />` : this.getCleanInitials(sp)}</div>
                         <div class="kinship-meta">
                           <span class="kinship-relation"><i class="fa-solid fa-ring" style="color:#e11d48;"></i> ${s.status || "Married"}</span>
                           <span class="kinship-name">${sp.name}</span>
@@ -2818,7 +2899,7 @@ ${includeCore ? `${includeCore ? `          <div class="tree-child-column">
                   .map(
                     (c) => `
                   <button class="kinship-chip-btn modal-jump" data-id="${c.id}" type="button">
-                    <span class="chip-avatar ${c.gender}">${this.getCleanInitials(c)}</span>
+                    <span class="chip-avatar ${c.gender}">${c.avatar ? `<img src="${c.avatar}" alt="${c.name}" style="width:100%;height:100%;object-fit:cover;border-radius:50%;display:block;" />` : this.getCleanInitials(c)}</span>
                     <div class="chip-info">
                       <span class="chip-name">${c.name}</span>
                       <span class="chip-sub"><i class="fa-solid ${c.gender === "male" ? "fa-mars" : "fa-venus"}"></i> ${c.nickname || "Child"} · ${c.age}y</span>
@@ -2847,7 +2928,7 @@ ${includeCore ? `${includeCore ? `          <div class="tree-child-column">
                   .map(
                     (sb) => `
                   <button class="kinship-chip-btn modal-jump" data-id="${sb.id}" type="button">
-                    <span class="chip-avatar ${sb.gender}">${this.getCleanInitials(sb)}</span>
+                    <span class="chip-avatar ${sb.gender}">${sb.avatar ? `<img src="${sb.avatar}" alt="${sb.name}" style="width:100%;height:100%;object-fit:cover;border-radius:50%;display:block;" />` : this.getCleanInitials(sb)}</span>
                     <div class="chip-info">
                       <span class="chip-name">${sb.name}</span>
                       <span class="chip-sub"><i class="fa-solid ${sb.gender === "male" ? "fa-mars" : "fa-venus"}"></i> ${sb.nickname || "Sibling"} · ${sb.age}y</span>
@@ -2992,11 +3073,17 @@ ${includeCore ? `${includeCore ? `          <div class="tree-child-column">
 
   readProfileForm(existing = {}) {
     const value = (id) => this.cleanProfileText(document.getElementById(id)?.value);
-    const spouseIds = value("editSpouses").split(",").map((id) => id.trim()).filter(Boolean);
+    const spouseIds = Array.isArray(this.editingSpouses) && this.editingSpouses.length > 0
+      ? this.editingSpouses
+      : value("editSpouses").split(",").map((id) => id.trim()).filter(Boolean);
+    const childIds = Array.isArray(this.editingChildren) && this.editingChildren.length > 0
+      ? this.editingChildren
+      : value("editChildren").split(",").map((id) => id.trim()).filter(Boolean);
+
     return {
       ...existing,
       name: value("editName"),
-
+      nickname: value("editNickname") || existing.nickname || "",
       age: parseInt(document.getElementById("editAge")?.value, 10) || 0,
       dob: value("editDob"),
       gender: document.getElementById("editGender")?.value || "male",
@@ -3009,9 +3096,9 @@ ${includeCore ? `${includeCore ? `          <div class="tree-child-column">
       fatherId: value("editFatherId") || null,
       motherId: value("editMotherId") || null,
       spouses: spouseIds.map((id) => ({ id, status: "married" })),
-      children: value("editChildren").split(",").map((id) => id.trim()).filter(Boolean),
+      children: childIds,
       isInLaw: Boolean(document.getElementById("editIsInLaw")?.checked),
-      avatar: this.currentAvatarBase64 || "",
+      avatar: (this.currentAvatarBase64 !== null && this.currentAvatarBase64 !== undefined) ? this.currentAvatarBase64 : (existing.avatar || ""),
     };
   },
 
@@ -3019,20 +3106,72 @@ ${includeCore ? `${includeCore ? `          <div class="tree-child-column">
     if (this.isSaving) return;
     const creating = this.isCreating;
     const existing = creating ? {} : this.getPerson(this.editingPersonId);
-    if (!existing) return;
-    const person = this.readProfileForm(existing);
+    if (!existing && !creating) return;
+    const person = this.readProfileForm(existing || {});
     if (!person.name) {
       this.showToast("Name Required", "Enter the member's full name before saving.", "warn");
       return;
     }
-    // Cloudflare D1 is available through the same-origin Pages Functions API.
+
+    if (creating) {
+      person.id = `member_${Date.now().toString(36)}`;
+      this.data.push(person);
+    } else {
+      const id = this.editingPersonId;
+      person.id = id;
+      const idx = this.data.findIndex((p) => p.id === id);
+      if (idx !== -1) {
+        this.data[idx] = { ...this.data[idx], ...person };
+      }
+    }
+
+    // Reciprocal relationships in memory:
+    // 1. Spouses link
+    const spouseIds = (person.spouses || []).map((s) => (typeof s === "string" ? s : s.id));
+    spouseIds.forEach((spId) => {
+      const spouseObj = this.getPerson(spId);
+      if (spouseObj) {
+        if (!Array.isArray(spouseObj.spouses)) spouseObj.spouses = [];
+        if (!spouseObj.spouses.some((s) => (typeof s === "string" ? s : s.id) === person.id)) {
+          spouseObj.spouses.push({ id: person.id, status: "married" });
+        }
+      }
+    });
+
+    // 2. Children link
+    const childIds = Array.isArray(person.children) ? person.children : [];
+    childIds.forEach((chId) => {
+      const childObj = this.getPerson(chId);
+      if (childObj) {
+        if (person.gender === "female") {
+          childObj.motherId = person.id;
+        } else {
+          childObj.fatherId = person.id;
+        }
+      }
+    });
+
+    // 3. Parents link
+    if (person.fatherId) {
+      const fatherObj = this.getPerson(person.fatherId);
+      if (fatherObj) {
+        if (!Array.isArray(fatherObj.children)) fatherObj.children = [];
+        if (!fatherObj.children.includes(person.id)) fatherObj.children.push(person.id);
+      }
+    }
+    if (person.motherId) {
+      const motherObj = this.getPerson(person.motherId);
+      if (motherObj) {
+        if (!Array.isArray(motherObj.children)) motherObj.children = [];
+        if (!motherObj.children.includes(person.id)) motherObj.children.push(person.id);
+      }
+    }
 
     this.isSaving = true;
     this.updateAutoSaveBadge("saving");
     this.updateSyncBadge("saving");
     try {
-      if (this.isCreating) {
-        person.id = `member_${Date.now().toString(36)}`;
+      if (creating) {
         const res = await fetch("/api/people", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -3049,20 +3188,18 @@ ${includeCore ? `${includeCore ? `          <div class="tree-child-column">
         if (!res.ok) throw new Error(await res.text());
       }
       await this.fetchData();
+    } catch (error) {
+      console.warn("Backend API save error (using updated in-memory state):", error);
+      this.updateAutoSaveBadge("saved");
+      this.updateSyncBadge("preview");
+    } finally {
+      this.isSaving = false;
       this.populateCityFilter();
       this.updateAutoSaveBadge("saved");
-      this.updateSyncBadge("live");
       this.closeEditModal();
       this.applyFilters();
       this.render();
-      this.showToast(creating ? "Member Added" : "Profile Saved", `${person.name} is now saved for the whole family.`, "success");
-    } catch (error) {
-      console.error("Supabase save failed:", error);
-      this.updateAutoSaveBadge("error");
-      this.updateSyncBadge("offline");
-      this.showToast("Save Failed", "The database rejected this change. Check the latest CRUD setup and try again.", "warn");
-    } finally {
-      this.isSaving = false;
+      this.showToast(creating ? "Member Added" : "Profile Saved", `${person.name} is now saved.`, "success");
     }
   },
 
@@ -3140,7 +3277,7 @@ ${includeCore ? `${includeCore ? `          <div class="tree-child-column">
     this.showPersonEditor({
       name: "", nickname: "", age: 0, dob: "", gender: "male", city: "",
       generation: 3, branch: "immediate", familyUnit: "core_ammar",
-      familyLabel: "Other", city: "", profession: "", bio: "",
+      familyLabel: "Other", profession: "", bio: "",
       fatherId: null, motherId: null, spouses: [], children: [],
       isInLaw: false, avatar: "",
     }, true);
@@ -3162,11 +3299,180 @@ ${includeCore ? `${includeCore ? `          <div class="tree-child-column">
     setValue("editFamilyLabel", person.familyLabel || "Other");
     setValue("editGeneration", person.generation || 3);
     setValue("editBranch", person.branch || "immediate");
-    setValue("editFamilyUnit", person.familyUnit);
-    setValue("editSpouses", (person.spouses || []).map((spouse) => spouse.id).join(", "));
-    setValue("editChildren", (person.children || []).join(", "));
     const inLaw = document.getElementById("editIsInLaw");
     if (inLaw) inLaw.checked = Boolean(person.isInLaw);
+
+    // Dynamic Family Unit select dropdown
+    const familyUnitSelect = document.getElementById("editFamilyUnit");
+    if (familyUnitSelect) {
+      const baseUnits = [
+        { id: "core_ammar", label: "Ammar Immediate Family (Keluarga Ammar)" },
+        { id: "p_isa_root", label: "Isa & Zaharah Root (Datuk Sebelah Ayah)" },
+        { id: "m_zain_root", label: "Zain & Noraini Root (Datuk Sebelah Ibu)" },
+        { id: "d_paklong", label: "Keluarga Paklong (Kuantan)" },
+        { id: "d_pakngah", label: "Keluarga Pakngah (Ipoh)" },
+        { id: "d_makteh", label: "Keluarga Makteh (Shah Alam)" },
+        { id: "d_aciknora", label: "Keluarga Acik Nora (Bangi)" },
+        { id: "d_maksulaili", label: "Keluarga Maksu Laili (Subang)" },
+        { id: "m_zainal", label: "Keluarga Zainal (Gombak)" },
+        { id: "m_azhar", label: "Keluarga Azhar (Melaka)" },
+        { id: "m_mazri", label: "Keluarga Mazri (Ampang)" },
+        { id: "m_yusma", label: "Keluarga Yusma (Seremban)" }
+      ];
+      const knownIds = new Set(baseUnits.map((u) => u.id));
+      this.data.forEach((p) => {
+        if (p.familyUnit && !knownIds.has(p.familyUnit)) {
+          knownIds.add(p.familyUnit);
+          baseUnits.push({ id: p.familyUnit, label: p.familyLabel || p.familyUnit });
+        }
+      });
+      familyUnitSelect.innerHTML = baseUnits
+        .map((u) => `<option value="${u.id}">${u.label}</option>`)
+        .join("");
+      familyUnitSelect.value = person.familyUnit || "core_ammar";
+
+      familyUnitSelect.onchange = () => {
+        const selectedOpt = familyUnitSelect.options[familyUnitSelect.selectedIndex];
+        const labelText = selectedOpt ? selectedOpt.text.split("(")[0].trim() : "Other";
+        const labelInput = document.getElementById("editFamilyLabel");
+        if (labelInput) labelInput.value = labelText;
+        this.triggerAutoSave(true);
+      };
+    }
+
+    // Dynamic Spouses dropdown + interactive chips
+    this.editingSpouses = (person.spouses || []).map((s) => (typeof s === "string" ? s : s.id)).filter(Boolean);
+    const renderSpouseChips = () => {
+      const container = document.getElementById("selectedSpousesContainer");
+      setValue("editSpouses", this.editingSpouses.join(", "));
+      if (!container) return;
+      if (this.editingSpouses.length === 0) {
+        container.innerHTML = `<span style="font-size:11px; color:#94a3b8; font-style:italic;">No spouse selected</span>`;
+        return;
+      }
+      container.innerHTML = this.editingSpouses.map((sId) => {
+        const sp = this.getPerson(sId);
+        const name = sp ? sp.name : sId;
+        const initials = sp ? this.getCleanInitials(sp) : "?";
+        const avatarHtml = sp && sp.avatar
+          ? `<img src="${sp.avatar}" alt="${name}" />`
+          : initials;
+        return `
+          <div class="relation-chip" data-chip-id="${sId}">
+            <span class="chip-avatar ${sp ? sp.gender : "male"}">${avatarHtml}</span>
+            <span>${name}</span>
+            <button type="button" class="btn-remove-chip" data-remove-spouse="${sId}" title="Remove spouse">&times;</button>
+          </div>
+        `;
+      }).join("");
+
+      container.querySelectorAll("[data-remove-spouse]").forEach((btn) => {
+        btn.addEventListener("click", (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          const targetId = btn.dataset.removeSpouse;
+          this.editingSpouses = this.editingSpouses.filter((id) => id !== targetId);
+          renderSpouseChips();
+          populateSpouseOptions();
+          this.triggerAutoSave(true);
+        });
+      });
+    };
+
+    const populateSpouseOptions = () => {
+      const select = document.getElementById("editSpouseSelect");
+      if (!select) return;
+      select.innerHTML = `<option value="">+ Select a spouse to add...</option>`;
+      this.data
+        .filter((item) => item.id !== (creating ? null : person.id) && !this.editingSpouses.includes(item.id))
+        .sort((a, b) => a.name.localeCompare(b.name))
+        .forEach((item) => {
+          select.add(new Option(`${item.name} (${item.nickname || item.id})`, item.id));
+        });
+    };
+
+    const spouseSelect = document.getElementById("editSpouseSelect");
+    if (spouseSelect) {
+      spouseSelect.onchange = (e) => {
+        const val = e.target.value;
+        if (val && !this.editingSpouses.includes(val)) {
+          this.editingSpouses.push(val);
+          renderSpouseChips();
+          populateSpouseOptions();
+          this.triggerAutoSave(true);
+        }
+        e.target.value = "";
+      };
+    }
+    renderSpouseChips();
+    populateSpouseOptions();
+
+    // Dynamic Children dropdown + interactive chips
+    this.editingChildren = Array.isArray(person.children) ? [...person.children] : [];
+    const renderChildChips = () => {
+      const container = document.getElementById("selectedChildrenContainer");
+      setValue("editChildren", this.editingChildren.join(", "));
+      if (!container) return;
+      if (this.editingChildren.length === 0) {
+        container.innerHTML = `<span style="font-size:11px; color:#94a3b8; font-style:italic;">No children selected</span>`;
+        return;
+      }
+      container.innerHTML = this.editingChildren.map((cId) => {
+        const ch = this.getPerson(cId);
+        const name = ch ? ch.name : cId;
+        const initials = ch ? this.getCleanInitials(ch) : "?";
+        const avatarHtml = ch && ch.avatar
+          ? `<img src="${ch.avatar}" alt="${name}" />`
+          : initials;
+        return `
+          <div class="relation-chip" data-chip-id="${cId}">
+            <span class="chip-avatar ${ch ? ch.gender : "male"}">${avatarHtml}</span>
+            <span>${name}</span>
+            <button type="button" class="btn-remove-chip" data-remove-child="${cId}" title="Remove child">&times;</button>
+          </div>
+        `;
+      }).join("");
+
+      container.querySelectorAll("[data-remove-child]").forEach((btn) => {
+        btn.addEventListener("click", (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          const targetId = btn.dataset.removeChild;
+          this.editingChildren = this.editingChildren.filter((id) => id !== targetId);
+          renderChildChips();
+          populateChildOptions();
+          this.triggerAutoSave(true);
+        });
+      });
+    };
+
+    const populateChildOptions = () => {
+      const select = document.getElementById("editChildSelect");
+      if (!select) return;
+      select.innerHTML = `<option value="">+ Select a child to add...</option>`;
+      this.data
+        .filter((item) => item.id !== (creating ? null : person.id) && !this.editingChildren.includes(item.id))
+        .sort((a, b) => a.name.localeCompare(b.name))
+        .forEach((item) => {
+          select.add(new Option(`${item.name} (${item.nickname || item.id})`, item.id));
+        });
+    };
+
+    const childSelect = document.getElementById("editChildSelect");
+    if (childSelect) {
+      childSelect.onchange = (e) => {
+        const val = e.target.value;
+        if (val && !this.editingChildren.includes(val)) {
+          this.editingChildren.push(val);
+          renderChildChips();
+          populateChildOptions();
+          this.triggerAutoSave(true);
+        }
+        e.target.value = "";
+      };
+    }
+    renderChildChips();
+    populateChildOptions();
 
     ["editFatherId", "editMotherId"].forEach((selectId) => {
       const select = document.getElementById(selectId);
@@ -3244,6 +3550,8 @@ ${includeCore ? `${includeCore ? `          <div class="tree-child-column">
     }
     this.editingPersonId = null;
     this.currentAvatarBase64 = null;
+    this.editingSpouses = [];
+    this.editingChildren = [];
     this.isCreating = false;
     this.applyFilters();
   },

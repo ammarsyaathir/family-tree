@@ -1,8 +1,21 @@
+# Dependencies
 node_modules/
-build/
-dist/
-coverage/
-.DS_Store
-*.log
+
+# Cloudflare Wrangler
+.wrangler/
+.dev.vars
 .env*
 !.env.example
+
+# OS / Editor
+.DS_Store
+Thumbs.db
+*.log
+
+# Scratch scripts & Bot Screenshots (Do not push to GitHub)
+screenshots/
+*.tmp
+take_screenshots.js
+fix_*.js
+test_*.js
+capture_*.js
