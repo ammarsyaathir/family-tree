@@ -12,8 +12,7 @@ node_modules/
 Thumbs.db
 *.log
 
-# Scratch scripts & Bot Screenshots (Do not push to GitHub)
-screenshots/
+# Scratch scripts & Temporary files
 *.tmp
 take_screenshots.js
 fix_*.js
